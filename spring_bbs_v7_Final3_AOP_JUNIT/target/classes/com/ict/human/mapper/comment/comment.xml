@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- dtd = document type definition -->
+
+<mapper namespace="com.ict.human.comment.dao.CommentDao">
+
+	<insert id="insertComment" parameterType="comment">
+		INSERT INTO COMMENTS
+		VALUES(COMMENT_SEQ.NEXTVAL, #{id}, #{commentContent}, SYSDATE, #{articleNum})
+	</insert>
+	
+	
+	<select id="getComments" parameterType="java.util.HashMap" resultType="comment">
+		<!-- 
+		SELECT *
+		FROM  (SELECT ROWNUM RM, TEMPCOMM.*
+     		   FROM (SELECT ID, COMMENTCONTENT, COMMENTDATE
+              	 	 FROM COMMENTS
+              	 	 WHERE ARTICLENUM = #{articleNum}
+            		 ORDER BY COMMENTNUM DESC
+            		 ) TEMPCOMM
+     		  )
+     	WHERE RM BETWEEN 1 AND #{commentRow}
+     	 -->
+     	
+     	SELECT *
+     	FROM (SELECT ID, COMMENTCONTENT, COMMENTDATE, ARTICLENUM
+     		  FROM COMMENTS
+     		  WHERE ARTICLENUM = #{articleNum}
+     		  ORDER BY COMMENTNUM DESC)
+     	WHERE ROWNUM BETWEEN 1 AND #{commentRow}
+	</select>
+</mapper>

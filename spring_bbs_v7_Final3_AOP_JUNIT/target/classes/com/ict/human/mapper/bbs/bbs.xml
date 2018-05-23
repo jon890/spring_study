@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- dtd = document type definition -->
+
+<mapper namespace="com.ict.human.bbs.dao.BBSDao">
+
+
+	<!-- 글쓰기  -->
+	<insert id="write" parameterType="article" useGeneratedKeys="true"
+			keyProperty="articleNum" keyColumn="articleNum">
+		INSERT INTO BBS1 
+		VALUES (BBS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, 0, 0, 0, SYSDATE, #{fileStatus})
+	</insert>
+	
+	<!-- 글 번호 수동으로 가져오기  -->
+	<select id="getNextArticleNum" resultType="Integer">
+		SELECT BBS_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<!-- 파일 업로드  -->
+	<insert id="insertFile" parameterType="file">
+		INSERT INTO FILELIST
+		VALUES (FILE_SEQ.NEXTVAL, #{originFname}, #{storedFname}, #{fileLength}, #{articleNum})
+	</insert>
+	
+	
+	<!-- 로그인  -->
+	<select id="login" parameterType="String" resultType="String">
+		SELECT PASS 
+		FROM LOGIN 
+		WHERE ID = #{id}
+	</select>
+	
+	
+	
+<!-- 	 pageNum에 따라 글 읽기 
+	<select id="list" parameterType="java.util.HashMap" resultType="article">
+		SELECT *
+		FROM (SELECT ROWNUM RM, HUMAN.*
+			  계층형 쿼리 사용 
+     		  FROM (SELECT ARTICLENUM, ID, TITLE, WRITEDATE, HIT, FILESTATUS, DEPTH
+              	 	FROM BBS1
+            		START WITH GROUPID = 0
+            		CONNECT BY PRIOR ARTICLENUM = GROUPID
+            		ORDER SIBLINGS BY ARTICLENUM DESC
+            		) HUMAN
+     		 )
+     	해쉬맵의 키를 주면 자동으로 밸류가 얻어져 나온다 
+		WHERE RM BETWEEN #{startRow} AND #{endRow}
+	</select> -->
+	
+	<select id="list" parameterType="java.util.HashMap" resultType="article">
+		SELECT *
+		FROM (SELECT ROWNUM RM, HUMAN.*
+			  <!-- 계층형 쿼리 사용  -->
+     		  FROM (SELECT ARTICLENUM, ID, TITLE, 
+     		        <!-- 오라클 내에서 날짜를 잘라서 가져오기 -->
+     		        <!-- 자바스크립트 단에서 처리하는 것이 낫다 -->
+     		  	    TO_CHAR(WRITEDATE, 'YYYY-MM-DD') AS WRITEDATE,
+     		  	    HIT, FILESTATUS, DEPTH, (SELECT COUNT(*)
+     		  	    						 FROM COMMENTS
+     		  	    						 WHERE BBS1.ARTICLENUM = COMMENTS.ARTICLENUM) as COMMENTCOUNT
+              	 	FROM BBS1
+            		START WITH GROUPID = 0
+            		CONNECT BY PRIOR ARTICLENUM = GROUPID
+            		ORDER SIBLINGS BY ARTICLENUM DESC
+            		) HUMAN
+     		 )
+     	<!-- 해쉬맵의 키를 주면 자동으로 밸류가 얻어져 나온다 -->
+		WHERE RM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	
+	<!-- 전체 글 개수  -->
+	<select id="getTotalCount" resultType="Integer">
+		SELECT COUNT(*)
+		FROM BBS1
+	</select>
+	
+	
+	<!-- 글 내용 읽기  -->
+	<select id="content" parameterType="int" resultType="article">
+		SELECT *
+		FROM BBS1
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+	<!-- 글 내용 읽기  -->
+	<select id="content1" parameterType="int" resultType="article">
+		SELECT BBS1.*, (SELECT COUNT(*)
+						FROM COMMENTS
+						WHERE BBS1.ARTICLENUM = COMMENTS.ARTICLENUM) as COMMENTCOUNT
+		FROM BBS1
+		WHERE BBS1.ARTICLENUM = #{articleNum}
+	</select>
+	
+	<!-- 글 내용 읽기 // 파일 읽기 -->
+	<select id="getFiles" parameterType="java.lang.Integer" resultType="file">
+		SELECT ORIGINFNAME, STOREDFNAME, FILELENGTH
+		FROM FILELIST
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+	
+	<!-- 답글 달기  -->
+	<insert id="reply" parameterType="article" useGeneratedKeys="true"
+			keyProperty="articleNum" keyColumn="articleNum">
+		INSERT INTO BBS1 
+		VALUES (BBS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, #{depth}+1 , 0, #{groupId}, SYSDATE, #{fileStatus})
+	</insert>
+	
+	
+	<!-- 글 지우기
+	<delete id="delete" parameterType="String">
+		DELETE
+		FROM BBS1
+		WHERE ARTICLENUM = #{articleNum}
+		숫자 형태가 들어와야 하지만 숫자가 들어오지 않고, 문자형 숫자 ("5")등이 들어오더라도
+			 자동으로 오라클에서 변환해준다.
+	</delete>  -->
+	
+	<!-- 원글을 지우면 답글도 같이 삭제 하기 -->
+	<delete id="delete" parameterType="String">
+		DELETE
+		FROM BBS1
+		WHERE ARTICLENUM IN (SELECT ARTICLENUM
+                             FROM BBS1
+                             START WITH ARTICLENUM = #{articleNum}
+   							 CONNECT BY PRIOR ARTICLENUM = GROUPID)
+	</delete>
+	
+	
+	
+	<!-- 글 수정할 때 dto 가져오기  -->
+	<update id="update" parameterType="article">
+		UPDATE BBS1
+		SET TITLE = #{title}, CONTENT = #{content}
+		WHERE ARTICLENUM = #{articleNum}
+	</update>
+	
+	<!-- 글 수정하기  -->
+	<select id="updateGetArticle" parameterType="String" resultType="article">
+		SELECT TITLE, CONTENT
+		FROM BBS1
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+	<select id="getCommentCount" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM COMMENTS
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+	<select id="getFileList" parameterType="String" resultType="String">
+		SELECT STOREDFNAME
+		FROM FILELIST
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+		
+</mapper>
