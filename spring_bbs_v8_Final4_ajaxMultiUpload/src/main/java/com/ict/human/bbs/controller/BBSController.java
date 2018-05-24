@@ -1,12 +1,17 @@
 package com.ict.human.bbs.controller;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ict.human.bbs.common.UploadFileUtils;
 import com.ict.human.bbs.dto.BBSDto;
 import com.ict.human.bbs.service.BBSService;
 
@@ -26,6 +32,9 @@ public class BBSController {
 	
 	@Autowired
 	private BBSService bbsService;
+	
+	@Resource(name="saveDir")
+	private String saveDir;
 	
 	
 	//	@ModelAttribute는 파라미터 이름을 반드시 적어주자
@@ -55,16 +64,40 @@ public class BBSController {
 	@RequestMapping(value = "/write.bbs", method = RequestMethod.POST)
 	// name과 연결되있는 속성값들이 BBSDto로 자동으로 연결된다. (spring 기능)
 	public String write(BBSDto article, HttpSession session,
-						@RequestPart("fname") List<MultipartFile> fname) {
+						@RequestPart("multiFile") List<MultipartFile> mfile) {
 		
 		// 세션에서 id를 받아온다 -> object로 넘어오기 때문에 downcasting 필요함
 		article.setId((String)session.getAttribute("id"));		
 		
-		bbsService.write(article, fname);
+		bbsService.write(article, mfile);
 
 		// secure coding -> 여러번 submit 방지를 위해서 redirect 사용
 		return "redirect:/list.bbs?pageNum=1";
 	}
+	
+	// 비동기 업로드 - 글쓰기시 동작
+	@ResponseBody
+	@RequestMapping(value = "/uploadAjax.bbs", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResponseEntity<List<String>> uploadAjax(@RequestPart("multiFile") List<MultipartFile> mfile) throws Exception{
+		List<String> fileList = new ArrayList<>();
+		
+		for(MultipartFile file : mfile) {
+			fileList.add(UploadFileUtils.uploadFile(saveDir, file.getOriginalFilename(), file.getBytes()));
+		}
+		return new ResponseEntity<>(fileList, HttpStatus.CREATED);
+	}
+	
+	// 비동기 업로드 - 파일 이름과 썸네일 이미지 보여주기
+	
+	public ResponseEntity<byte[]> displayFile(String fileName){
+	//									     @RequesetParam을 쓰지 않더라도 넘어온다
+	//										  쓰지 않는다면 값이 넘어오지 않더라도 400 ERROR가 나지 않음
+		InputStream in = null;
+		ResponseEntity<byte[]> entity = null;
+		
+		return null;
+	}
+	
 	
 	
 	@RequestMapping(value = "/login.bbs", method = RequestMethod.POST)

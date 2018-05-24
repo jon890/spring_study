@@ -126,7 +126,7 @@ public class UploadController {
 //	ajax() 함수가 배열을 직렬화 하지 않고 보낼때는..아래 코드처럼 해도 처리됨
 //	public ResponseEntity<String> deleteFile(@RequestParam("files[]") String[] files){
 	public ResponseEntity<String> deleteFile(@RequestParam("files") String[] files){				
-		logger.info("delete all files: "+ files);    
+		logger.info("delete all files: "+ files);   
 		if(files == null || files.length == 0) {
 			return new ResponseEntity<String>	("deleted", HttpStatus.OK);
 		}

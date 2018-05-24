@@ -16,11 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ict.human.bbs.common.FileSaveHelper;
 import com.ict.human.bbs.common.Page;
 import com.ict.human.bbs.dao.BBSDao;
 import com.ict.human.bbs.dto.BBSDto;
-import com.ict.human.bbs.dto.FileDto;
 
 @Service
 public class BBSServiceImpl implements BBSService {
@@ -31,8 +29,6 @@ public class BBSServiceImpl implements BBSService {
 	@Autowired
 	private Page page;
 	
-	@Autowired
-	private FileSaveHelper fileSaveHelper;
 	@Resource(name="saveDir")
 	private String saveDir;
 	
@@ -69,9 +65,10 @@ public class BBSServiceImpl implements BBSService {
 		// 0이 나오는 것이 아니고, 다음 글 번호가 나온다.
 		// useGeneratedKeys
 		//System.out.println(article.getArticleNum());
-		if(!fname.get(0).isEmpty()) {	
-			commonFileUpload(fname, article.getArticleNum());
-		} 
+		
+//		if(!fname.get(0).isEmpty()) {	
+//			commonFileUpload(fname, article.getArticleNum());
+//		} 
 	}
 
 	
@@ -134,9 +131,9 @@ public class BBSServiceImpl implements BBSService {
 		
 		bbsDao.reply(article);
 		
-		if(!fname.get(0).isEmpty()) {	
+		/*if(!fname.get(0).isEmpty()) {	
 			commonFileUpload(fname, article.getArticleNum());
-		} 
+		} */
 	}
 
 
@@ -172,22 +169,22 @@ public class BBSServiceImpl implements BBSService {
 	}	
 	
 	
-	public void commonFileUpload(List<MultipartFile> mFile, int articleNum) {
-		FileDto fileDto = null;
-		
-		for(MultipartFile uploadFile : mFile) {
-			if( !uploadFile.isEmpty() ) {
-				String storedFname = fileSaveHelper.save(uploadFile);
-				
-				fileDto = new FileDto();
-				fileDto.setOriginFname(uploadFile.getOriginalFilename());
-				fileDto.setStoredFname(storedFname);
-				fileDto.setFileLength(uploadFile.getSize());
-				fileDto.setArticleNum(articleNum);				
-				bbsDao.insertFile(fileDto);
-			}
-		}
-	}
+//	public void commonFileUpload(List<MultipartFile> mFile, int articleNum) {
+//		FileDto fileDto = null;
+//		
+//		for(MultipartFile uploadFile : mFile) {
+//			if( !uploadFile.isEmpty() ) {
+//				String storedFname = fileSaveHelper.save(uploadFile);
+//				
+//				fileDto = new FileDto();
+//				fileDto.setOriginFname(uploadFile.getOriginalFilename());
+//				fileDto.setStoredFname(storedFname);
+//				fileDto.setFileLength(uploadFile.getSize());
+//				fileDto.setArticleNum(articleNum);				
+//				bbsDao.insertFile(fileDto);
+//			}
+//		}
+//	}
 
 
 	@Override

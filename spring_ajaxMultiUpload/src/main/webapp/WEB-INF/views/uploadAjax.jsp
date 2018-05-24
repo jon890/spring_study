@@ -117,7 +117,7 @@ small {
 		$.each($(".human"),function(index,item){
 // 			files[index]=$(this).attr("data-src");
 			files.push($(this).attr("data-src"));						
-		});				
+		});
 		
 //	 	배열을 직렬화해서 전송함 
 		$.ajaxSettings.traditional = true;
@@ -131,14 +131,17 @@ small {
 				   $(".uploadedList").children().remove();
 				   alert("삭제성공");
 			   }
+		   } ,
+		   error : function(xhr){
+				alert("삭제할 파일이 없습니다!"); 
 		   }
 	   });
 	});
 	
 	function checkImageType(fileName){			
 // 		/i는 대소문자 구분 하지 말라는 뜻임
-		let pattern = /.jpg|.gif|.png/i;		
-		return fileName.match(pattern);		
+		let pattern = /.jpg|.gif|.png/i;
+		return fileName.match(pattern);
 	}
 	
 	function getImageLink(fileName){

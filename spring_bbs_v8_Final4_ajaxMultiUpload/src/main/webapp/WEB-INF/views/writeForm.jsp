@@ -78,10 +78,65 @@
 			
 			$(".fileDrop").on("drop", function(event){
 				event.preventDefault();
-			});
 			/* 파일 드로그 앤 드랍시 기본 동작(파일 실행)을 막기 */
+				
+			// 드로그앤 드롭한 파일을 이벤트에서 받아오기
+				let files = event.originalEvent.dataTransfer.files;
+				let formData = new FormData();
+				$.each(files, function(index, item){
+					formData.append("multiFile", item);
+					//                  키           ,  밸류
+					//Reqeust에서 multiFile로 읽어 들이기
+				});
+				
+				$.ajax({
+					url : '/human/uploadAjax.bbs',
+					data : formData,
+					dataType : 'json',
+					/* multipart/form-data로 전송하기 위한 구문 */
+					processData : false,
+					contentType : false,
+					/* multipart/form-data로 전송하기 위한 구문 */
+					type : 'POST',
+					success : function(data){
+						let str = "";
+						$.each(data, function(index, fileName){
+							if(checkImageType(fileName)){
+								str = "<div><a href = 'displayFile?fileName='" + getImageLink(fileName) + ">" + 
+									  "<img src = 'displayFile?fileName = " + fileName + "'>" +
+									  "</a><small class = 'oneDeleteFile' data src = '" + fileName + "'>X</small></div>";
+							} else {
+								str = "<div><a href = 'displayFile?fileName='" + fileName + ">" + 
+								  	  getOriginalName(fileName) +
+									  "</a><small class = 'oneDeleteFile' data src = '" + fileName + "'>X</small></div>";
+							}			
+						})
+						
+						$(".uploadedList").append(str);
+					},
+					error : function(xhr){
+						alert("ERROR HTML! = " + xhr.statusText);
+					}
+				})		
+			});
 			
+			function checkImageType(fileName){
+				let pattern = /.jpg|.png|.gif/i;
+				// i는 대 소문자를 구분하지 않는 정규식
+				return fileName.match(pattern);
+			}
 			
+			function getImageLink(fileName){	
+				let front = fileName.substr(0, 12);
+				let end = fileName.substr(14);
+				return front + end;
+			}
+			
+			function getOriginalName(fileName){
+				let idx = fileName.indexOf("_") + 1;
+				return fileName.substr(idx);
+			}
+
 		</script>
 			
 	</body>
