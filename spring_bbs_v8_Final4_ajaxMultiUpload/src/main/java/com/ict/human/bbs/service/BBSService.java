@@ -13,7 +13,7 @@ import com.ict.human.bbs.dto.BBSDto;
 
 public interface BBSService {
 
-	public void write(BBSDto article, List<MultipartFile> fname);
+	public void write(BBSDto article);
 	public void list(String pageNum, Model model);
 	public String login(String id, String pass, HttpSession session);
 	//public void content(int articleNum, int fileStatus, Model model);
@@ -22,9 +22,8 @@ public interface BBSService {
 	public void delete(String articleNum, int fileStatus);
 	public BBSDto updateGetArticle(String articleNum);
 	public void update(BBSDto article);
+	public void commonFileUpload(List<String> files, int articleNum);
 	public FileSystemResource download(HttpServletResponse resp,
-							          String storedFname,
-							          String originFname,
-							          int fileLength);
+							          String storedFname);
 
 }

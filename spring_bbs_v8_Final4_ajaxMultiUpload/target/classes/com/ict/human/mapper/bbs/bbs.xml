@@ -9,8 +9,7 @@
 	<!-- 글쓰기  -->
 	<insert id="write" parameterType="article" useGeneratedKeys="true"
 			keyProperty="articleNum" keyColumn="articleNum">
-		INSERT INTO BBS1 
-		VALUES (BBS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, 0, 0, 0, SYSDATE, #{fileStatus})
+		INSERT INTO BBS1 VALUES (BBS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, 0, 0, 0, SYSDATE, #{fileStatus})
 	</insert>
 	
 	<!-- 글 번호 수동으로 가져오기  -->
@@ -21,8 +20,8 @@
 	
 	<!-- 파일 업로드  -->
 	<insert id="insertFile" parameterType="file">
-		INSERT INTO FILELIST
-		VALUES (FILE_SEQ.NEXTVAL, #{originFname}, #{storedFname}, #{fileLength}, #{articleNum})
+		INSERT INTO FILELIST1
+		VALUES (FILE_SEQ.NEXTVAL, #{storedFname}, #{articleNum})
 	</insert>
 	
 	
@@ -97,9 +96,9 @@
 	</select>
 	
 	<!-- 글 내용 읽기 // 파일 읽기 -->
-	<select id="getFiles" parameterType="java.lang.Integer" resultType="file">
-		SELECT ORIGINFNAME, STOREDFNAME, FILELENGTH
-		FROM FILELIST
+	<select id="getFiles" parameterType="java.lang.Integer" resultType="String">
+		SELECT STOREDFNAME
+		FROM FILELIST1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
 	
@@ -155,7 +154,7 @@
 	
 	<select id="getFileList" parameterType="String" resultType="String">
 		SELECT STOREDFNAME
-		FROM FILELIST
+		FROM FILELIST1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
 	

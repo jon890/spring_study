@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ict.human.bbs.common.Page;
 import com.ict.human.bbs.dao.BBSDao;
 import com.ict.human.bbs.dto.BBSDto;
+import com.ict.human.bbs.dto.FileDto;
 
 @Service
 public class BBSServiceImpl implements BBSService {
@@ -52,23 +53,15 @@ public class BBSServiceImpl implements BBSService {
 	
 	
 	@Override
-	public void write(BBSDto article, List<MultipartFile> fname) {
-	
-		if(!fname.get(0).isEmpty()) {
-			article.setFileStatus((byte)1);
-		} 
-	
-		bbsDao.write(article);
-		// query를 수행하면 값을 article을 리턴하지 않더라도
-		// query가 수행되고 난 다음의 article 객체로 인식된다.
-		// 따라서 article.getArticleNum()으로 찍으면
-		// 0이 나오는 것이 아니고, 다음 글 번호가 나온다.
-		// useGeneratedKeys
-		//System.out.println(article.getArticleNum());
+	public void write(BBSDto article) {
 		
-//		if(!fname.get(0).isEmpty()) {	
-//			commonFileUpload(fname, article.getArticleNum());
-//		} 
+		//System.out.println(article.getFileStatus());
+		bbsDao.write(article);
+		
+		if( article.getFileStatus() == 1 ) {
+			commonFileUpload(article.getFiles(), article.getArticleNum());
+	
+		}
 	}
 
 	
@@ -115,7 +108,7 @@ public class BBSServiceImpl implements BBSService {
 	public void content1(int articleNum, int fileStatus, Model model) {
 		BBSDto article = bbsDao.content1(articleNum);	
 		if( fileStatus == 1) {
-			model.addAttribute("fileList", bbsDao.getFiles(articleNum));
+			model.addAttribute("files", bbsDao.getFiles(articleNum));
 		}
 		model.addAttribute("article", article);
 		
@@ -169,36 +162,33 @@ public class BBSServiceImpl implements BBSService {
 	}	
 	
 	
-//	public void commonFileUpload(List<MultipartFile> mFile, int articleNum) {
-//		FileDto fileDto = null;
-//		
-//		for(MultipartFile uploadFile : mFile) {
-//			if( !uploadFile.isEmpty() ) {
-//				String storedFname = fileSaveHelper.save(uploadFile);
-//				
-//				fileDto = new FileDto();
-//				fileDto.setOriginFname(uploadFile.getOriginalFilename());
-//				fileDto.setStoredFname(storedFname);
-//				fileDto.setFileLength(uploadFile.getSize());
-//				fileDto.setArticleNum(articleNum);				
-//				bbsDao.insertFile(fileDto);
-//			}
-//		}
-//	}
-
-
 	@Override
-	public FileSystemResource download(HttpServletResponse resp, String storedFname, String originFname,
-			int fileLength) {
+	public void commonFileUpload(List<String> files, int articleNum) {
+		
+		FileDto fileDto = null;
+		for(String file : files) {
+			fileDto = new FileDto();
+			fileDto.setArticleNum(articleNum);
+			fileDto.setStoredFname(file);
+			bbsDao.insertFile(fileDto);
+		}
+		
+	}
+	
+	@Override
+	// 파일시스템 리소스 이용
+	public FileSystemResource download(HttpServletResponse resp, String storedFname) {
 			resp.setContentType("application/download");
-			resp.setContentLength(fileLength);
+			int idx = storedFname.indexOf("_") + 1;
+			String originFname = storedFname.substring(idx);
+			
 			try {
 				originFname = URLEncoder.encode(originFname, "utf-8").replace("+", "%20").replaceAll("%28", "(").replaceAll("%29", ")");
-			} catch (Exception e) {
-				
+			} catch (Exception e) {	
 			}
 			
 			resp.setHeader("Content-Disposition", "attachment;" + " filename=\"" + originFname + "\";");
+			System.out.println(saveDir + storedFname);
 			FileSystemResource fsr = new FileSystemResource(saveDir + storedFname);
 			return fsr;
 	}

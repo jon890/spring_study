@@ -11,9 +11,10 @@ import javax.imageio.ImageIO;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
-
+@Component
 public class UploadFileUtils {
 	private static final Logger logger = LoggerFactory.getLogger(UploadFileUtils.class);
 	
@@ -49,7 +50,7 @@ public class UploadFileUtils {
 	private static String makeThumnail(String saveDir, String storedPath, String storedFname) throws Exception {
 		BufferedImage sourceImg = ImageIO.read(new File(saveDir + storedPath, storedFname));
 		BufferedImage thumImg = Scalr.resize(sourceImg, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_HEIGHT, 100);
-		String thumnailName = saveDir + storedPath + "s_" + storedFname;
+		String thumnailName = saveDir + storedPath + File.separator + "s_" + storedFname;
 		
 		File newFile = new File(thumnailName);
 		String formatName = storedFname.substring(storedFname.lastIndexOf(".")+1);

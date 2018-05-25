@@ -19,7 +19,8 @@ public interface BBSDao {
 	public BBSDto updateGetArticle(String articleNum);
 	public void update(BBSDto article);
 	public void insertFile(FileDto fileDto);
-	public List<FileDto> getFiles(int articleNum);
+	public List<String> getFiles(int articleNum);
 	public int getCommentCount(int articleNum);
 	public List<String> getFileList(String articleNum);
+	public int getNextArticleNum();
 }

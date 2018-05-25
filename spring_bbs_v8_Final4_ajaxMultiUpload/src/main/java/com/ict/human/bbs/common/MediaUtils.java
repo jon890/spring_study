@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MediaUtils {
 	private static Map<String, MediaType> mediaMap;
 	

@@ -1,5 +1,7 @@
 package com.ict.human.bbs.dto;
 
+import java.util.List;
+
 public class BBSDto {
 	
 	private int articleNum;
@@ -11,6 +13,7 @@ public class BBSDto {
 	private int groupId;
 	private String writeDate;
 	private int fileStatus;
+	private List<String> files;
 	private int commentCount;
 	
 	
@@ -74,12 +77,18 @@ public class BBSDto {
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;
 	}
+	public List<String> getFiles() {
+		return files;
+	}
+	public void setFiles(List<String> files) {
+		this.files = files;
+	}
 	
 	@Override
 	public String toString() {
 		return "BBSDto [articleNum=" + articleNum + ", id=" + id + ", title=" + title + ", content=" + content
 				+ ", depth=" + depth + ", hit=" + hit + ", groupId=" + groupId + ", writeDate=" + writeDate
-				+ ", fileStatus=" + fileStatus + ", commentCount=" + commentCount + "]";
+				+ ", fileStatus=" + fileStatus + ", files=" + files + ", commentCount=" + commentCount + "]";
 	}
-	
+
 }
