@@ -55,12 +55,10 @@ public class BBSServiceImpl implements BBSService {
 	@Override
 	public void write(BBSDto article) {
 		
-		//System.out.println(article.getFileStatus());
 		bbsDao.write(article);
 		
 		if( article.getFileStatus() == 1 ) {
 			commonFileUpload(article.getFiles(), article.getArticleNum());
-	
 		}
 	}
 
@@ -116,17 +114,12 @@ public class BBSServiceImpl implements BBSService {
 
 
 	@Override
-	public void reply(BBSDto article, List<MultipartFile> fname) {
-			
-		if(!fname.get(0).isEmpty()) {
-			article.setFileStatus((byte)1);
-		} 
-		
+	public void reply(BBSDto article) {
+	
 		bbsDao.reply(article);
-		
-		/*if(!fname.get(0).isEmpty()) {	
-			commonFileUpload(fname, article.getArticleNum());
-		} */
+		if( article.getFileStatus() == 1 ) {
+			commonFileUpload(article.getFiles(), article.getArticleNum());
+		}
 	}
 
 
@@ -149,19 +142,21 @@ public class BBSServiceImpl implements BBSService {
 		bbsDao.delete(articleNum);
 	}
 
-
 	@Override
 	public BBSDto updateGetArticle(String articleNum) {
 		return bbsDao.updateGetArticle(articleNum);	
 	}
-
 
 	@Override
 	public void update(BBSDto article) {
 		bbsDao.update(article);
 	}	
 	
-	
+	@Override
+	public List<String> getFiles(String articleNum) {
+		return bbsDao.getFileList(articleNum);
+	}
+
 	@Override
 	public void commonFileUpload(List<String> files, int articleNum) {
 		
@@ -192,6 +187,5 @@ public class BBSServiceImpl implements BBSService {
 			FileSystemResource fsr = new FileSystemResource(saveDir + storedFname);
 			return fsr;
 	}
-	
 	
 }

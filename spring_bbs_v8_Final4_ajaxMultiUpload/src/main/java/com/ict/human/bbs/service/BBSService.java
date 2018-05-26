@@ -18,12 +18,21 @@ public interface BBSService {
 	public String login(String id, String pass, HttpSession session);
 	//public void content(int articleNum, int fileStatus, Model model);
 	public void content1(int articleNum, int fileStatus, Model model);
-	public void reply(BBSDto article, List<MultipartFile> mFile);
+	public void reply(BBSDto article);
 	public void delete(String articleNum, int fileStatus);
-	public BBSDto updateGetArticle(String articleNum);
-	public void update(BBSDto article);
+	
 	public void commonFileUpload(List<String> files, int articleNum);
 	public FileSystemResource download(HttpServletResponse resp,
 							          String storedFname);
+	
+	
+	/* ********** 글 수정 관련 메소드 ********** */
+	// 글 수정시 글 읽어오기
+	public BBSDto updateGetArticle(String articleNum);
+	// 글 수정 완료 버튼을 눌렀을 때 글 업데이트
+	public void update(BBSDto article);
+	// 글의 파일 리스트 읽어오기
+	public List<String> getFiles(String articleNum);
+	
 
 }

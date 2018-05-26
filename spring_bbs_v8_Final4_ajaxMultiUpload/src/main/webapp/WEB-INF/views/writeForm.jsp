@@ -39,14 +39,14 @@
 				<input type="hidden" id="fileStatus" name="fileStatus" value="0">
 				<table class="table">  
 					<tr>
-			 			 <td>글쓴이 :</td>
+			 			 <td>작성자</td>
 			 			 <!-- session에서 가져온다-->
 			 			 <!-- request > session > application 순으로 찾는다 -->
 			 			 <td>${id}</td>
 			 		</tr>
 			 		
 			 		<tr>	 
-					 <td>제목 : </td>
+					 <td>제목</td>
 					 <td><input type="text" name="title"></td>			 
 					</tr>
 					
@@ -81,10 +81,11 @@
 			function allDeleteFiles(){			
 				let files=[];
 				$.each($(".human"),function(index,item){
-					files[index]=$(this).attr("data-src");
+					//files[index]=$(this).attr("data-src");
 					files.push($(this).attr("data-src"));						
 				});
-					
+				
+				// 배열 직렬화 전송
 				$.ajaxSettings.traditional = true;
 				
 				$.ajax({
@@ -95,7 +96,7 @@
 					success:function(result){
 						if(result == 'deleted'){
 							$(".uploadedList").children().remove();
-							alert("삭제성공");
+							alert("업로드 된 파일을 모두 삭제 하였습니다.");
 						}
 					} ,
 					error : function(xhr){

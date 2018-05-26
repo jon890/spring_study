@@ -82,10 +82,9 @@ public class BBSController {
 	}
 
 	@RequestMapping(value = "/reply.bbs", method = RequestMethod.POST)
-	public String reply(@RequestParam("pageNum") String pageNum, @RequestPart("fname") List<MultipartFile> fname,
-			BBSDto article, HttpSession session) {
+	public String reply(@RequestParam("pageNum") String pageNum, BBSDto article, HttpSession session) {
 		article.setId((String) session.getAttribute("id"));
-		bbsService.reply(article, fname);
+		bbsService.reply(article);
 		return "redirect:/list.bbs?pageNum=".concat(pageNum);
 	}
 
@@ -97,14 +96,18 @@ public class BBSController {
 		return "redirect:/list.bbs?pageNum=".concat(pageNum);
 	}
 
+	
+	// 수정할 글 읽어오기
 	@RequestMapping(value = "/update.bbs", method = RequestMethod.GET)
 	public String updateGetArticle(@ModelAttribute("articleNum") String articleNum,
-			@ModelAttribute("pageNum") String pageNum, Model model) {
+								   @ModelAttribute("pageNum") String pageNum, Model model) {
 
 		model.addAttribute("article", bbsService.updateGetArticle(articleNum));
+		model.addAttribute("files", bbsService.getFiles(articleNum));
 		return "updateForm";
 	}
 
+	// 글 수정하기 버튼을 눌렀을 때 동작
 	@RequestMapping(value = "/update.bbs", method = RequestMethod.POST)
 	public String update(@RequestParam("articleNum") String articleNum, @RequestParam("pageNum") String pageNum,
 			BBSDto article) {

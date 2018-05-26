@@ -16,11 +16,16 @@ public interface BBSDao {
 	public BBSDto content1(int articleNum);
 	public void reply(BBSDto article);
 	public void delete(String articleNum);
-	public BBSDto updateGetArticle(String articleNum);
-	public void update(BBSDto article);
+
 	public void insertFile(FileDto fileDto);
 	public List<String> getFiles(int articleNum);
 	public int getCommentCount(int articleNum);
 	public List<String> getFileList(String articleNum);
 	public int getNextArticleNum();
+	
+	/* ********** 글 수정 관련 메소드 ********** */
+	// 글 수정시 글 읽어오기
+	public BBSDto updateGetArticle(String articleNum);
+	// 글 수정 완료 버튼을 눌렀을 때 글 업데이트
+	public void update(BBSDto article);
 }

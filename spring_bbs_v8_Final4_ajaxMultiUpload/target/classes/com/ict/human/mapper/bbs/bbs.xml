@@ -129,23 +129,7 @@
                              START WITH ARTICLENUM = #{articleNum}
    							 CONNECT BY PRIOR ARTICLENUM = GROUPID)
 	</delete>
-	
-	
-	
-	<!-- 글 수정할 때 dto 가져오기  -->
-	<update id="update" parameterType="article">
-		UPDATE BBS1
-		SET TITLE = #{title}, CONTENT = #{content}
-		WHERE ARTICLENUM = #{articleNum}
-	</update>
-	
-	<!-- 글 수정하기  -->
-	<select id="updateGetArticle" parameterType="String" resultType="article">
-		SELECT TITLE, CONTENT
-		FROM BBS1
-		WHERE ARTICLENUM = #{articleNum}
-	</select>
-	
+		
 	<select id="getCommentCount" parameterType="int" resultType="int">
 		SELECT COUNT(*)
 		FROM COMMENTS
@@ -155,6 +139,20 @@
 	<select id="getFileList" parameterType="String" resultType="String">
 		SELECT STOREDFNAME
 		FROM FILELIST1
+		WHERE ARTICLENUM = #{articleNum}
+	</select>
+	
+	<!-- 글 수정하기  -->
+	<update id="update" parameterType="article">
+		UPDATE BBS1
+		SET TITLE = #{title}, CONTENT = #{content}
+		WHERE ARTICLENUM = #{articleNum}
+	</update>
+	
+	<!-- 글 수정할 때 dto 가져오기  -->
+	<select id="updateGetArticle" parameterType="String" resultType="article">
+		SELECT TITLE, CONTENT
+		FROM BBS1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
 	
