@@ -185,7 +185,7 @@
 						<td colspan="2">
 							<c:if test="${article.fileStatus == 0}">
 								<div>업로드된 파일이 없습니다!</div>
-							</c:if>	
+							</c:if>
 						
 							<c:if test="${article.fileStatus !=0}">
 								<c:if test="${files!=null}">

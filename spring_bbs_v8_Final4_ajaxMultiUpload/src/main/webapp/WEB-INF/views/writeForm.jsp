@@ -97,6 +97,7 @@
 						if(result == 'deleted'){
 							$(".uploadedList").children().remove();
 							alert("업로드 된 파일을 모두 삭제 하였습니다.");
+							$("#fileStatus").val(0);
 						}
 					} ,
 					error : function(xhr){
@@ -147,11 +148,11 @@
 							  if(checkImageType(fileName)){						 
 								  str ="<div><img src='displayFile.bbs?fileName="+fileName+"'/>"	
 										  +"<small class='human'  data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+ getImageLink(fileName) +"'>";
+										  +"<input type='hidden' id='files' name='files' value='"+ getImageLink(fileName) +"'>";
 							  }else{
 								  str = "<div>" + getOriginalName(fileName)
 										  +"<small class='human' data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+fileName+"'>";
+										  +"<input type='hidden' id='files' name='files' value='"+fileName+"'>";
 							  }
 							  
 							  $(".uploadedList").append(str);
@@ -175,7 +176,7 @@
 				   },
 				   dataType:"text",		 
 				   success:function(result){
-					   if(result == 'deleted'){				   
+					   if(result == 'deleted'){			
 						   that.parent("div").remove();
 						   alert("삭제성공");
 					   }

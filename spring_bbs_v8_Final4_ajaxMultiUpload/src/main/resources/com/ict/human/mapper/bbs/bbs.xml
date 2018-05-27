@@ -151,7 +151,7 @@
 	
 	<!-- 글 수정할 때 dto 가져오기  -->
 	<select id="updateGetArticle" parameterType="String" resultType="article">
-		SELECT TITLE, CONTENT
+		SELECT TITLE, CONTENT, FILESTATUS
 		FROM BBS1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
