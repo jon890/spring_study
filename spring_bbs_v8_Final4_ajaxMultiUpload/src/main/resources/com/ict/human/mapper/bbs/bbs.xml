@@ -87,7 +87,7 @@
 	</select>
 	
 	<!-- 글 내용 읽기  -->
-	<select id="content1" parameterType="int" resultType="article">
+	<select id="content1" parameterType="String" resultType="article">
 		SELECT BBS1.*, (SELECT COUNT(*)
 						FROM COMMENTS
 						WHERE BBS1.ARTICLENUM = COMMENTS.ARTICLENUM) as COMMENTCOUNT
@@ -96,7 +96,7 @@
 	</select>
 	
 	<!-- 글 내용 읽기 // 파일 읽기 -->
-	<select id="getFiles" parameterType="java.lang.Integer" resultType="String">
+	<select id="getFiles" parameterType="java.lang.String" resultType="String">
 		SELECT STOREDFNAME
 		FROM FILELIST1
 		WHERE ARTICLENUM = #{articleNum}
@@ -135,26 +135,29 @@
 		FROM COMMENTS
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
-	
-	<select id="getFileList" parameterType="String" resultType="String">
-		SELECT STOREDFNAME
-		FROM FILELIST1
-		WHERE ARTICLENUM = #{articleNum}
-	</select>
+
 	
 	<!-- 글 수정하기  -->
 	<update id="update" parameterType="article">
 		UPDATE BBS1
-		SET TITLE = #{title}, CONTENT = #{content}
+		SET TITLE = #{title}, CONTENT = #{content}, FILESTATUS = #{fileStatus}
 		WHERE ARTICLENUM = #{articleNum}
 	</update>
 	
 	<!-- 글 수정할 때 dto 가져오기  -->
-	<select id="updateGetArticle" parameterType="String" resultType="article">
-		SELECT TITLE, CONTENT, FILESTATUS
+	<select id="getUpdateArticle" parameterType="String" resultType="article">
+		SELECT TITLE, CONTENT
 		FROM BBS1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
+	
+	<delete id="dbDelFileName" parameterType="java.util.ArrayList">
+		DELETE FROM FILELIST1
+		WHERE STOREDFNAME IN
+		<foreach collection="list" item="storedFname"  open="(" separator="," close=")">
+        	#{storedFname}
+		</foreach>
+	</delete>
 	
 		
 </mapper>

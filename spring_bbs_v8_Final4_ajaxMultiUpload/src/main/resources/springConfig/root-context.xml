@@ -53,7 +53,7 @@
 		
 		<!-- 사용자 업로드 파일 저장 경로 -->
 		<bean id="saveDir" class="java.lang.String">
-			<constructor-arg value="D:\SpringStudy\Review\upload"/>
+			<constructor-arg value="D:\spring_project\upload"/>
 		</bean>
 		
 		

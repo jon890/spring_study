@@ -90,7 +90,7 @@
 		
 		<script>
 			$("input[type=reset]").on("click", function(){
-				if( $("fileStatus") == 1 ){
+				if( $("#fileStatus") == 1 ){
 					allDeleteFiles();
 				}
 			});
@@ -107,7 +107,7 @@
 				$.ajax({
 					url : "/human/deleteAllFiles.bbs",
 					type : "POST",
-					data : {files, files},
+					data : {files: files},
 					dataType : "TEXT",
 					
 					success : function(result){
@@ -151,12 +151,12 @@
 						$.each(data, function(index, fileName){
 							if(checkImageType(fileName)){						 
 								  str ="<div><img src='displayFile.bbs?fileName="+fileName+"'/>"	
-										  +"<small class='human'  data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+ getImageLink(fileName) +"'>";
+										  +"<small class='human'  data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' name='files' value='"+ getImageLink(fileName) +"'></div>";
 							  }else{
 								  str = "<div><p>" + getOriginalName(fileName)
-										  +"</p><small class='human' data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+fileName+"'>";
+										  +"</p><small class='human' data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' name='files' value='"+fileName+"'></div>";
 							  }
 						
 							$(".uploadedList").append(str);
@@ -183,7 +183,6 @@
 					
 					success : function(result){
 						if(result == 'deleted'){
-							alert("업로드 한 파일 " + that.siblings("p").val() + " 이 삭제 되었습니다");
 							that.parent("div").remove();
 						}
 					}

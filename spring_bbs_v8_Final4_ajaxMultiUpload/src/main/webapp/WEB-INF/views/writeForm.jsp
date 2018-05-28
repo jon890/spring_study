@@ -36,7 +36,7 @@
 
 		<div class="container">
 			<form action="/human/write.bbs" method="post">
-				<input type="hidden" id="fileStatus" name="fileStatus" value="0">
+				<!-- <input type="hidden" id="fileStatus" name="fileStatus" value="0"> -->
 				<table class="table">  
 					<tr>
 			 			 <td>작성자</td>
@@ -97,7 +97,7 @@
 						if(result == 'deleted'){
 							$(".uploadedList").children().remove();
 							alert("업로드 된 파일을 모두 삭제 하였습니다.");
-							$("#fileStatus").val(0);
+							//$("#fileStatus").val(0);
 						}
 					} ,
 					error : function(xhr){
@@ -147,16 +147,16 @@
 						  $.each(data,function(index, fileName){					  					 
 							  if(checkImageType(fileName)){						 
 								  str ="<div><img src='displayFile.bbs?fileName="+fileName+"'/>"	
-										  +"<small class='human'  data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' id='files' name='files' value='"+ getImageLink(fileName) +"'>";
+										  +"<small class='human'  data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' id='files' name='files' value='"+ getImageLink(fileName) +"'></div>";
 							  }else{
 								  str = "<div>" + getOriginalName(fileName)
-										  +"<small class='human' data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' id='files' name='files' value='"+fileName+"'>";
+										  +"<small class='human' data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' id='files' name='files' value='"+fileName+"'></div>";
 							  }
 							  
 							  $(".uploadedList").append(str);
-							  $("#fileStatus").val(1);
+							  //$("#fileStatus").val(1);
 							  //alert($("#fileStatus").val());
 						  });				 
 					  },
@@ -178,6 +178,7 @@
 				   success:function(result){
 					   if(result == 'deleted'){			
 						   that.parent("div").remove();
+						   //$("#fileStatus").val(0);
 						   alert("삭제성공");
 					   }
 				   }

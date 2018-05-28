@@ -2,6 +2,7 @@ package com.ict.human.bbs.service;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,10 +12,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.ict.human.bbs.common.MediaUtils;
 import com.ict.human.bbs.common.Page;
 import com.ict.human.bbs.dao.BBSDao;
 import com.ict.human.bbs.dto.BBSDto;
@@ -54,10 +57,12 @@ public class BBSServiceImpl implements BBSService {
 	@Override
 	public void write(BBSDto article) {
 		
-		bbsDao.write(article);
-		
-		if( article.getFileStatus() == 1 ) {
-			commonFileUpload(article.getFiles(), article.getArticleNum());
+		if( article.getFiles()==null ){
+			bbsDao.write(article);			
+		} else{							
+			article.setFileStatus((byte)1);
+			bbsDao.write(article);
+			commonFileUpload(article.getFiles(),article.getArticleNum());		
 		}
 	}
 
@@ -102,7 +107,7 @@ public class BBSServiceImpl implements BBSService {
 	}*/
 	
 	@Override
-	public void content1(int articleNum, int fileStatus, Model model) {
+	public void content1(String articleNum, int fileStatus, Model model) {
 		BBSDto article = bbsDao.content1(articleNum);	
 		if( fileStatus == 1) {
 			model.addAttribute("files", bbsDao.getFiles(articleNum));
@@ -128,7 +133,7 @@ public class BBSServiceImpl implements BBSService {
 		List<String> deleteList = null;
 		
 		if(fileStatus == 1) {
-			deleteList = bbsDao.getFileList(articleNum);
+			deleteList = bbsDao.getFiles(articleNum);
 			for(String storedFname : deleteList) {
 				File tempFile = new File(saveDir + storedFname);
 				// 파일이 존재하는지 확인하는 메소드
@@ -142,18 +147,88 @@ public class BBSServiceImpl implements BBSService {
 	}
 
 	@Override
-	public BBSDto updateGetArticle(String articleNum) {
-		return bbsDao.updateGetArticle(articleNum);	
+	public BBSDto getUpdateArticle(String articleNum) {
+		return bbsDao.getUpdateArticle(articleNum);	
+		
 	}
 
 	@Override
-	public void update(BBSDto article) {
+	public void update(BBSDto article, String[] deleteFileName, Model model, int fileCount) {
+		
+		//System.out.println("이전에 업로드한 파일 개수 : " + fileCount);
+		//System.out.println("지울 파일의 이름 : "+ deleteFileName);
+		
+		// 새로 업로드한 파일이 있을 때
+		if( article.getFiles() != null) {
+			
+			article.setFileStatus((byte)1);
+			commonFileUpload(article.getFiles(), article.getArticleNum());
+			
+			// 이전의 파일을 지웠다면
+			if(deleteFileName != null) {
+				commonDelFileName(deleteFileName);
+			}
+		// 새로 업로드한 파일이 없을 때	
+		} else {
+			
+			// 기존의 업로드에서 제거한 파일이 있을 때
+			if( deleteFileName != null) {
+				
+				// 새로 업로드를 하지 않고, 기존의 파일을 모두 지우면
+				if (deleteFileName.length == fileCount) {
+					article.setFileStatus((byte)0);
+				}
+				
+				commonDelFileName(deleteFileName);
+				
+			}	
+		}
 		bbsDao.update(article);
-	}	
+
+	}
+	
+	
+	public void commonDelFileName(String[] deleteFileName) {
+	
+		// Mybatis 매퍼 파일이 List를 받을 수 있다 (배열도 가능 하다)
+		// List를 이용할 수 있다는 것을 보여주기 위한 예제 코드
+		ArrayList<String> delFileList = new ArrayList<>();
+		for(String delFileName : deleteFileName) {
+			delFileList.add(delFileName);
+		}
+		bbsDao.dbDelFileName(delFileList);
+		for(String storedFname : deleteFileName) {
+			storageDelFileName(storedFname);
+		}
+	}
+	
+	
+	public void storageDelFileName(String storedFname) {
+		if (storedFname != null) {
+			String formatName = storedFname.substring(storedFname.lastIndexOf(".") + 1);
+			MediaType mType = MediaUtils.getMediaType(formatName);
+			
+			if(mType != null) {
+				String front = storedFname.substring(0, 12);
+				String end = storedFname.substring(12);
+				File file = new File( saveDir + (front + "s_" + end).replace('/', File.separatorChar));
+				
+				if(file.exists()) {
+					file.delete();
+				}
+				
+			}
+			File file = new File(saveDir + storedFname);
+			if(file.exists()) {
+				file.delete();
+			}
+		}
+	}
+	
 	
 	@Override
 	public List<String> getFiles(String articleNum) {
-		return bbsDao.getFileList(articleNum);
+		return bbsDao.getFiles(articleNum);
 	}
 
 	@Override

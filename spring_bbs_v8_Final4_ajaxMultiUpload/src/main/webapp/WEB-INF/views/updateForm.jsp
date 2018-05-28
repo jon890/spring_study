@@ -24,7 +24,8 @@
 				border : 2px dotted darksalmon;
 				width : 400px;
 				height : 200px;
-				background-color : silk;
+				background-color : yellow;
+				margin-bottom : 30px;
 			}
 			
 			#fileDrop p{
@@ -47,6 +48,8 @@
 			
 			div#uploadedList{
 				border : 2px solid gray;
+				margin-top : 30px;
+				margin-bottom : 30px;
 			}
 	
 		</style>
@@ -59,7 +62,8 @@
 			<form action="/human/update.bbs" method="post">
 				<input type="hidden" name="articleNum" value="${articleNum}">
 				<input type="hidden" name="pageNum" value="${pageNum}">
-				<input type="hidden" id="fileStatus" name="fileStatus" value="${article.fileStatus}">
+				<input type="hidden" id="fileStatus" name="fileStatus" value="${fileStatus}">
+				<input type="hidden" name="fileCount" value="${fileCount}">
 				<table class="table">
 					<tr>
 						<td>작성자</td>
@@ -74,6 +78,23 @@
 						</td>
 					</tr>
 					<tr>
+						<td>이전에 첨부된 파일</td>
+						<td>
+							<c:if test="${files==null}">
+								<div>업로드된 파일이 없습니다!</div>
+							</c:if>
+							<c:if test="${files!=null}">
+								<ul id="delGroup">
+									<c:forEach var="storedFname" items="${files}">
+										<li>${storedFname.substring(storedFname.indexOf("_")+1)}
+											<input type="button" deleteFileName="${storedFname}" value="삭제" class="delFile">
+										</li>
+									</c:forEach>
+								</ul>
+							</c:if>
+						</td>
+					</tr>
+				<tr>
 						<td><input type="submit" value="수정하기"></td>
 						<td><input type="reset" value="모두 초기화하기"></td>
 					</tr>
@@ -82,39 +103,53 @@
 				<div id="fileDrop">
 					<p>업로드 할 파일을 여기에 올려두세요</p>
 				</div>
-				
-				<br><br><hr>
-				
+							
 				<div id="uploadedList">
-					<h3>업로드 된 목록</h3>
-					<ul>
-						<c:forEach var="file" items="${files}">
-							<div>
-								<c:if
-									test="${common.getFormatName(file) == 'png' ||
-											  common.getFormatName(file) == 'jpg' ||
-											  common.getFormatName(file) == 'gif'}">
-									<img src='displayFile.bbs?fileName="${file}"' />
-									<small class='human' data-src='"${file}"'>X</small>
-									<input type='hidden' name='files' value='"+ getImageLink(file) +"'>
-								</c:if> 
-								<c:if
-									test="${common.getFormatName(file) != 'png' &&
-											  common.getFormatName(file) != 'jpg' &&
-											  common.getFormatName(file) != 'gif'}">
-									${file.substring(file.indexOf('_') + 1)}
-									<small class='human' data-src='"${file}"'>X</small>
-									 <input type='hidden' name='files' value='"+file+"'>
-								</c:if>
-							</div>
-						</c:forEach>
-					</ul>
+					<h3>수정시 업로드한 목록</h3>
+						<%-- <c:if test="${files != null}">
+							<c:forEach var="file" items="${files}">
+								<div>
+									<c:if
+										test="${common.getFormatName(file) == 'png' ||
+												common.getFormatName(file) == 'jpg' ||
+												common.getFormatName(file) == 'gif'}">
+										<img src='displayFile.bbs?fileName="${file}"' />  
+										<small class='human' data-src='"${file}"'>X</small><
+										<input type='hidden' name='files' value="getImageLink(file)">
+									</c:if> 
+									<c:if
+										test="${common.getFormatName(file) != 'png' &&
+												common.getFormatName(file) != 'jpg' &&
+												common.getFormatName(file) != 'gif'}">
+										${file.substring(file.indexOf('_') + 1)}
+										<small class='human' data-src='"${file}"'>X</small>
+										<input type='hidden' name='files' value='"${file}"'>
+									</c:if>
+								</div>
+							</c:forEach>
+						</c:if> --%>
 				</div>
-				<input type="button" value="업로드된 파일 모두 삭제" onclick="allDeleteFiles()">
+				<input type="button" id="allDelete" value="업로드된 파일 모두 삭제" onclick="allDeleteFiles()">
 			</form>
 		</div>
 
 		<script>
+			$(document).ready(function(){
+				// 이미 업로드된 파일 삭제 버튼을 눌렀을 때
+				// 버튼이 몇 개 생길지 모르므로 class 속성으로 선택 (id는 한 개 밖에 못 받아온다)
+				$(".delFile").on("click", function(){
+					alert($(this).attr("deleteFileName"));
+					// deleteFileName이 원래 있던 속성이 아니므로 아래처럼 하면 못읽어 온다
+					// let storedFname=$(this).prop("deleteFileName");
+					let storedFname=$(this).attr("deleteFileName");
+					$(this).parent().remove();
+					let deleteFileName = "<input type='hidden' name='deleteFileName' value='"+storedFname+"'>";
+					alert(deleteFileName);
+					$(deleteFileName).appendTo("form");
+				});
+			});
+		
+		
 			$("input[type=reset]").on("click", function(){
 				if( $("#fileStatus") == 1 ){
 					allDeleteFiles();
@@ -133,7 +168,7 @@
 				$.ajax({
 					url : "/human/deleteAllFiles.bbs",
 					type : "POST",
-					data : {files, files},
+					data : {files: files},
 					dataType : "TEXT",
 					
 					success : function(result){
@@ -179,12 +214,12 @@
 						$.each(data, function(index, fileName){
 							if(checkImageType(fileName)){						 
 								  str ="<div><img src='displayFile.bbs?fileName="+fileName+"'/>"	
-										  +"<small class='human'  data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+ getImageLink(fileName) +"'>";
+										  +"<small class='human'  data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' name='files' value='"+ getImageLink(fileName) +"'></div>";
 							  }else{
-								  str = "<div><p>" + getOriginalName(fileName)
-										  +"</p><small class='human' data-src='"+fileName+"'>X</small></div>"
-										  +"<input type='hidden' name='files' value='"+fileName+"'>";
+								  str = "<div>" + getOriginalName(fileName)
+										  +"<small class='human' data-src='"+fileName+"'>X</small>"
+										  +"<input type='hidden' name='files' value='"+fileName+"'></div>";
 							  }
 						
 							$("#uploadedList").append(str);

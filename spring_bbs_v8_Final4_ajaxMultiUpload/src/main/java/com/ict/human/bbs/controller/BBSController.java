@@ -62,8 +62,12 @@ public class BBSController {
 	}
 
 	@RequestMapping(value = "/content.bbs", method = RequestMethod.GET)
-	public String content(@RequestParam("articleNum") int articleNum, @ModelAttribute("pageNum") String pageNum,
-			@RequestParam("fileStatus") int fileStatus, Model model, HttpSession session, HttpServletResponse resp) {
+	public String content(@RequestParam("articleNum") String articleNum, 
+						  @ModelAttribute("pageNum") String pageNum,
+						  @RequestParam("fileStatus") int fileStatus, 
+						  Model model, 
+						  HttpSession session, 
+						  HttpServletResponse resp) {
 		// 상관관계 하위질의를 이용해서 댓글 개수를 하나의 쿼리문으로 실행
 		bbsService.content1(articleNum, fileStatus, model);
 		// 해당글의 댓글 수를 가져오는 쿼리를 한 번더 실행
@@ -95,23 +99,36 @@ public class BBSController {
 	
 	// 수정할 글 읽어오기
 	@RequestMapping(value = "/update.bbs", method = RequestMethod.GET)
-	public String updateGetArticle(@ModelAttribute("articleNum") String articleNum,
-								   @ModelAttribute("pageNum") String pageNum, Model model) {
+	public String getUpdateArticle(@ModelAttribute("articleNum") String articleNum,
+								   @ModelAttribute("pageNum") String pageNum,
+								   @ModelAttribute("fileStatus") int fileStatus,
+								   Model model) {
 
-		model.addAttribute("article", bbsService.updateGetArticle(articleNum));
-		model.addAttribute("files", bbsService.getFiles(articleNum));
+		model.addAttribute("article", bbsService.getUpdateArticle(articleNum));
+		if(fileStatus == 1) {
+			model.addAttribute("files", bbsService.getFiles(articleNum));
+			model.addAttribute("fileCount", bbsService.getFiles(articleNum).size());
+		} else {
+			model.addAttribute("fileCount", 0);
+		}
 		return "updateForm";
 	}
 
 	// 글 수정하기 버튼을 눌렀을 때 동작
 	@RequestMapping(value = "/update.bbs", method = RequestMethod.POST)
-	public String update(@RequestParam("articleNum") String articleNum, @RequestParam("pageNum") String pageNum,
-			BBSDto article) {
-		bbsService.update(article);
-		return "redirect:/content.bbs?pageNum=" + pageNum + "&articleNum=" + articleNum + "&fileStatus="
-				+ article.getFileStatus();
+	public String update(BBSDto article,
+						 @RequestParam("articleNum") String articleNum, 
+						 @RequestParam("pageNum") String pageNum,
+						 String[] deleteFileName,
+						 Model model,
+						 int fileCount) {
+		bbsService.update(article, deleteFileName, model, fileCount);
+		//System.out.println("article status : " + article.getFileStatus());
+		return "redirect:/content.bbs?pageNum=" + pageNum + "&articleNum=" + articleNum + "&fileStatus=" + article.getFileStatus();
 	}
 
+	
+	
 	@RequestMapping(value = "/logout.bbs")
 	public String logout(HttpSession session) {
 		// 세션을 끊으려면 invalidate() 메소드를 이용한다.

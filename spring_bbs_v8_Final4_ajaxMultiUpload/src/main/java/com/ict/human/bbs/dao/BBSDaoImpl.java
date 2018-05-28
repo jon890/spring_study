@@ -1,5 +1,6 @@
 package com.ict.human.bbs.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class BBSDaoImpl implements BBSDao{
 	}*/
 	
 	@Override
-	public BBSDto content1(int articleNum) {
+	public BBSDto content1(String articleNum) {
 		return sqlSession.selectOne(nameSpace.concat(".content1"), articleNum);
 	}
 
@@ -70,13 +71,20 @@ public class BBSDaoImpl implements BBSDao{
 	}
 
 	@Override
-	public BBSDto updateGetArticle(String articleNum) {
-		return sqlSession.selectOne(nameSpace.concat(".updateGetArticle"), articleNum);
+	public BBSDto getUpdateArticle(String articleNum) {
+		return sqlSession.selectOne(nameSpace.concat(".getUpdateArticle"), articleNum);
 	}
 
 	@Override
 	public void update(BBSDto article) {
 		sqlSession.update(nameSpace.concat(".update"), article);
+	}
+	
+
+	@Override
+	public void dbDelFileName(ArrayList<String> delFileList) {
+		sqlSession.delete(nameSpace.concat(".dbDelFileName"), delFileList);
+		
 	}
 
 	@Override
@@ -85,18 +93,13 @@ public class BBSDaoImpl implements BBSDao{
 	}
 
 	@Override
-	public List<String> getFiles(int articleNum) {
+	public List<String> getFiles(String articleNum) {
 		return sqlSession.selectList(nameSpace.concat(".getFiles"), articleNum);
 	}
 
 	@Override
 	public int getCommentCount(int articleNum) {
 		return sqlSession.selectOne(nameSpace.concat(".getCommentCount"), articleNum);
-	}
-
-	@Override
-	public List<String> getFileList(String articleNum) {
-		return sqlSession.selectList(nameSpace.concat(".getFileList"), articleNum);
 	}
 
 	@Override
