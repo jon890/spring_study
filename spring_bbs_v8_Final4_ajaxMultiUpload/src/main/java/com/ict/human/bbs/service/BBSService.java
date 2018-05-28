@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ict.human.bbs.dto.BBSDto;
 
