@@ -16,7 +16,7 @@
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	
 	
-	<!-- Map[pingJackson2JsonView 공부 -->
+	<!-- MapppingJackson2JsonView 공부 -->
 <!-- 	<bean id="JSON" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
 	
 	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>	 -->
