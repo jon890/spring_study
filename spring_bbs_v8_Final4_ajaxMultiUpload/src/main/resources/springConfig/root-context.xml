@@ -69,13 +69,16 @@
 		</bean> -->
 		
 		
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+			p:dataSource-ref="dataSource"
+			p:configLocation="classpath:/mybatisConfig/mybatisConfig.xml"
+			p:mapperLocations="classpath:/com/ict/human/mapper/**/*.xml"/>
 		
-		
-		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 			<property name="dataSource" ref="dataSource"/>
 			<property name="configLocation" value="classpath:/mybatisConfig/mybatisConfig.xml"/>
 			<property name="mapperLocations" value="classpath:/com/ict/human/mapper/**/*.xml"/>
-		</bean> 
+		</bean>  -->
 		
 		
 		<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
