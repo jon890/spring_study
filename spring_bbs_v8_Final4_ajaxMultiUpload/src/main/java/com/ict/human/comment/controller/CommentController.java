@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,13 +38,24 @@ public class CommentController {
 		
 	}
 	
+////	MappingJacksonJSonview 사용
+//	@RequestMapping(value = "/commentRead.comment")
+//	public String commentRead(@RequestParam("articleNum") int articleNum,
+//							  @RequestParam("commentRow") int commentRow,
+//							  Model model){
+//		model.addAttribute("commentList", commentService.getComments(articleNum, commentRow));
+//		return "JSON";
+//		
+//	}
+	
+	
+	
+	
 	@RequestMapping(value = "/commentRead.comment")
 	@ResponseBody
 	public List<CommentDto> commentRead(@RequestParam("articleNum") int articleNum,
 										@RequestParam("commentRow") int commentRow){
 		return commentService.getComments(articleNum, commentRow);
 	}
-	
-	
 	
 }

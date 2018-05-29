@@ -129,6 +129,8 @@
 						html += "</tr>";
 					
 					$.each(data, function(index, item){
+						/* MappingJackson2JsonView 사용 */
+					/* $.each(data.commentList, function(index, item){ */
 						html += "<tr>";
 						html += "<td >" + (index+1) + "</td>";
 						html += "<td>" + item.id + "</td>";
