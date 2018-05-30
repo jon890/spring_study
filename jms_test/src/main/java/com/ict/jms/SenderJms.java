@@ -27,6 +27,7 @@ public class SenderJms {
 								return session.createObjectMessage(jv);
 							}
 						});
+		System.out.println("메시지 전송완료");
 	}
 	
 	
