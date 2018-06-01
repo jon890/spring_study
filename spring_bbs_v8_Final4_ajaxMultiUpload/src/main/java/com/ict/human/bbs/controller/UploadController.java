@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ict.human.bbs.common.MediaUtils;
 import com.ict.human.bbs.common.UploadFileUtils;
 import com.ict.human.bbs.service.BBSService;
-import com.ict.human.bbs.service.BBSServiceImpl;
 
 
 @Controller
