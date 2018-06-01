@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,13 +19,16 @@ import com.ict.human.bbs.service.BBSService;
 @Controller
 public class BBSController {
 
+//	DI 시켜줄 의존객체를 못 찾으면 null 상태가 되고 WAS 구동시에 에러가 나지 않는다.
+//	@Autowired(required=false)
+	
 	@Autowired
+	@Qualifier("a")
 	private BBSService bbsService;
-
+	
 	@Resource(name = "saveDir")
 	private String saveDir;
 
-	
 	@RequestMapping(value = "/list.bbs", method = RequestMethod.GET)
 	public String list(@ModelAttribute("pageNum") String pageNum, Model model) {
 		bbsService.list(pageNum, model);

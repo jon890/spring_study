@@ -18,7 +18,6 @@
 	
 	<tx:annotation-driven proxy-target-class="true"/>
 	
-	
 	<!-- AspectJ를 쓸 수 있게 하는 구문 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import com.ict.human.bbs.dto.BBSDto;
 import com.ict.human.bbs.dto.FileDto;
 
 @Service
+@Qualifier("a")
 public class BBSServiceImpl implements BBSService {
 
 	@Autowired

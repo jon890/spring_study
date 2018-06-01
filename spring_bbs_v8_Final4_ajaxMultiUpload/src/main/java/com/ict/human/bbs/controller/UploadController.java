@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ict.human.bbs.common.MediaUtils;
 import com.ict.human.bbs.common.UploadFileUtils;
 import com.ict.human.bbs.service.BBSService;
+import com.ict.human.bbs.service.BBSServiceImpl;
 
 
 @Controller
@@ -41,6 +43,7 @@ public class UploadController {
 	private String saveDir;
 	
 	@Autowired
+	@Qualifier("a")
 	private BBSService bbsService;
 
 	// 비동기 업로드 - 글쓰기시 동작
