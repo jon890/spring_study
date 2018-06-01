@@ -1,0 +1,3 @@
+글쓰기를 비동기로 했음...
+filelist2 테이블을 새로 만들었음 : originFname 컬럼 삭제
+stroedFnamed세에서 "_" 뒤를 잘라내면 originFname이 됨  

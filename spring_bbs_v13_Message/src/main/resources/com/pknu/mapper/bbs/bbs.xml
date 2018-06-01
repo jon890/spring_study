@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mybatis map 선언 표시 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+              "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.pknu.bbs.dao.BBSDao">
+	<select id="getArticleCount" resultType="int">
+		SELECT COUNT(*) FROM BBS2
+	</select>	
+	
+	<select id="getArticles" parameterType="HashMap" resultType="article">
+		SELECT articleNum,id,title,depth,hit,
+			   to_char(writeDate,'YYYY-MM-DD') as writeDate,fileStatus,commentCount
+		FROM (SELECT ROWNUM RM, human.*
+								FROM (SELECT BBS2.*,(select count(*)
+													 from comments2
+													 where bbs2.articleNum=comments2.articleNum	
+													) as commentCount 
+									  FROM  BBS2 
+									  START WITH groupId=0 
+									  CONNECT BY PRIOR articleNum=groupId 
+									  ORDER SIBLINGS BY articleNum desc) human)  
+		WHERE RM BETWEEN #{startRow} and #{endRow}
+	</select>
+	
+	<select id="getMessageCount" resultType="int"  parameterType="String"> 
+		SELECT COUNT(*) FROM MESSAGE WHERE RECEIVEID=#{ID} AND MESSAGESTATUS=1 
+	</select>
+	
+	<select id="getArticle" parameterType="int" resultType="article">
+		SELECT bbs2.*,(select count(*) 
+					  from comments2
+					  where comments2.articleNum=bbs2.articleNum)  as commentCount 
+		FROM bbs2 
+		WHERE articleNum=#{articleNum}
+	</select>
+	
+	<select id="login" parameterType="String" resultType="String">
+		SELECT PASS FROM LOGIN WHERE ID=#{id}
+	</select>
+	
+	<insert id="insertArticle" parameterType="article">
+		INSERT INTO BBS2 values(
+		<if test="articleNum ==0">
+			bbs_seq.nextval
+		</if>
+		<if test="articleNum !=0">
+			#{articleNum}
+		</if>		
+			,#{id},#{title},#{content},0,0,0,sysdate,#{fileStatus})
+	</insert>
+	
+	<select id="getNextArticleNum" resultType="int">
+		SELECT BBS_SEQ.NEXTVAL FROM DUAL
+	</select>
+	
+<!-- 	삭제 구현 -->
+	<select id="getStoredFnames" parameterType="int" resultType="String">
+		SELECT STOREDFNAME
+		FROM FILELIST
+		WHERE ARTICLENUM=#{ARITLCLENUM}
+	</select>
+	
+	<!-- 	계층형 쿼리에 해당되는 모든 글 다 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE
+		FROM BBS2	
+		WHERE ARTICLENUM IN(
+							SELECT ARTICLENUM
+							FROM BBS2
+							START WITH ARTICLENUM=#{ARTICLENUM}
+							CONNECT BY PRIOR ARTICLENUM=GROUPID									 
+						  )
+	</delete>	
+	
+	<insert id="replyArticle" parameterType="article">
+		INSERT INTO BBS2 values(bbs_seq.nextval,#{id},#{title},#{content},#{depth}+1,0,
+								#{groupId},sysdate,#{fileStatus})
+	</insert>
+	
+<!-- 	수정하기 구현 -->
+	<select id="updateGetArticle" parameterType="int" resultType="article">
+		SELECT TITLE,CONTENT FROM BBS2 WHERE ARTICLENUM=#{articleNum}
+	</select>
+	
+	<update id="updateArticle" parameterType="article">
+		update BBS2
+		set title=#{title}, content=#{content},fileStatus=#{fileStatus}
+		where articleNum=#{articleNum}
+	</update>
+	
+	<!-- 	collection = 전달받은 인자값 -->
+<!-- 	item = 전달받은 인자값을 다른이름으로 대체 -->
+<!-- 	open 해당 구문이 시작할떄  -->
+<!-- 	close 해당구문이 끝날떄 -->
+<!-- 	separator 한번 이상 반복할때 반복되는 사이에 해당 문을 넣어줌 -->
+	<delete id="someDelFile" parameterType="List">
+		delete 
+		from fileList 
+		where storedFname IN
+		<foreach collection="list" item="storedFname" open="(" separator="," close=")">
+			#{storedFname}
+		</foreach>
+	</delete>
+	
+<!-- 	파일 테이블에 입력 -->
+	<insert id="insertFile" parameterType="fileDto">
+		insert into filelist2 values(file_seq.nextval,#{storedFname},
+									#{fileLength},#{articleNum})
+	</insert>
+	
+	<select id="getFiles" resultType="String"  parameterType="Integer">
+		 select storedFname 
+		 from filelist2 
+		 where articleNum=#{articleNum} 
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mybatis map 선언 표시 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+              "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.pknu.message.dao.MessageDao">
+	<insert id="messageWrite" parameterType="message">
+		insert into message
+		values(message_seq.nextval,#{id},#{receiveId},#{messageContent},sysdate,1)
+	</insert>
+	
+	<select id="getMessageCount" parameterType="String" resultType="int">
+		 SELECT COUNT(*)
+		 FROM MESSAGE
+		 WHERE RECEIVEID=#{ID}
+	</select>
+	
+	<select id="getMessages" parameterType="HashMap" resultType="message">
+		select * 
+		from (select rownum rm, human.* 
+		      from (select * 
+		            from message 
+					where receiveid=#{id} 
+					order by messageNum desc) human ) 
+		where rm between #{startRow} and #{startRow}+9
+	</select>
+	
+	<select id="messageContent" parameterType="int" resultType="message">
+		SELECT *
+		FROM MESSAGE
+		WHERE MESSAGENUM=#{MESSAGENUM}
+	</select>
+	
+	<update id="updateMessageStatus" parameterType="int">
+		UPDATE MESSAGE
+		SET MESSAGESTATUS=0
+		WHERE MESSAGENUM=#{MESSAGENUM}
+	</update>
+	
+	
+	<delete id="messageDelete" parameterType="list">
+		DELETE 
+		FROM MESSAGE 
+		WHERE messageNum IN
+		<foreach collection="array" item="delMessage" open="(" separator="," close=")">
+			#{delMessage}
+		</foreach>
+	</delete>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" id="propertyConfigurer">
+		<property name="location" value="classpath:db.properties" />
+	</bean>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />			
+	</bean>	
+			
+<!-- 	BasicDataSource는 커넥션 풀을 지원 -->
+<!--     Tomcat7번전은 패키지명이 다름 -->
+<!-- 	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource"> -->
+	
+<!-- 	커넥션 풀 사용 -->
+<!-- 	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource"> -->
+<!-- 		<property name="driverClassName" value="${driverClassName}" /> -->
+<!-- 		<property name="url" value="${url}" /> -->
+<!-- 		<property name="username" value="${username}" /> -->
+<!-- 		<property name="password" value="${password}" />	 -->
+<!-- 		<property name="initialSize" value="10"/>	 -->
+<!-- 		<property name="maxTotal" value="5"></property> -->
+<!-- 	</bean>	 -->
+	
+<!-- 	JNDI를 이용해서 커넥션 풀 사용 -->
+<!-- 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
+<!-- 		<property name="jndiName" value="pknu"/> -->
+<!-- 		resourceRef를 true로 설정하면 java:/comp/env/를 안붙여도 디폴트로 인식함  -->
+<!-- 		<property name="resourceRef" value="true"></property> -->
+<!-- 	</bean>	 -->
+
+<!--    JEE 이용 -->
+<!-- 	<jee:jndi-lookup jndi-name="pknu" id="dataSource" resource-ref="true"></jee:jndi-lookup> -->
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
+		<property name="dataSource" ref="dataSource" /> 
+	</bean>
+	
+	<tx:annotation-driven/>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>  
+		<property name="configLocation" value="classpath:/mybatisConfig/mybatisConfig.xml"/>			
+		<property name="mapperLocations" value="classpath:/com/pknu/mapper/**/*.xml"></property>			
+	</bean>	
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">		
+		<constructor-arg ref="sqlSessionFactory"/>		
+	</bean>		
+	
+	
+	<bean id="saveDir" class="java.lang.String">
+		<constructor-arg value="D:\spring_project\upload" />		
+	</bean> 	
+
+    <mybatis-spring:scan base-package="com.pknu.*.dao"/>
+
+
+
+
+
+
+
+
+
+
+		
+		
+</beans>
