@@ -1,7 +1,5 @@
 package com.pknu.message.controller;
 
-import java.util.HashMap;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +66,7 @@ public class MessageController {
 	
 	@RequestMapping(value="messageDelete.message", method=RequestMethod.POST)
 	@ResponseBody
-	public String messageDelete(String[] delMsgs, @RequestParam("pageNum") int pageNum){
+	public String messageDelete(String[] delMsgs){
 		
 		
 		if( delMsgs != null) {
