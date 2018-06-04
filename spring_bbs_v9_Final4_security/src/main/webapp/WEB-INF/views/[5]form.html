@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>HTML 연습</title>
+</head>
+
+<body>
+	<form>
+		<fieldset>
+			<legend>기본정보</legend>
+			<label for="id">아이디 : <input type="text" name="id"></label>
+			<br>
+			<label for="pass">비밀번호 : <input type="password" name="pass"></label>
+			<br>
+			<label for="name">성명 : <input type="text" name="name"></label>
+		</fieldset>
+		<fieldset style="width:50%">
+<!-- 		<fieldset style="width:500px"> -->
+			<legend>세부정보</legend>
+			주소 : <input type="text" name="address">
+			<br>
+			우편번호 : <input type="text" name="zipcode1"> - <input type="text" name="zipcode2">
+			<br>
+			email : <input type="text" name="email">
+			<br>
+			성별 : <input type="radio" name="gender" value="M">남자
+			<input type="radio" name="gender" value="F">여자
+			<br>
+			생년월일 : <input type="date" name="birth">
+			<br>
+			직업 : 
+			<select name="job">
+				<option value="1">개발자</option>
+				<option value="2">디자이너</option>
+				<option value="3">퍼블리셔</option>
+				<option value="4">기획자</option>
+			</select>
+			<br>
+			관심분야 : 
+			<input type="checkbox" name="favorite" value="1">음악
+			<input type="checkbox" name="favorite" value="2">미술
+			<input type="checkbox" name="favorite" value="3">외국어
+			<input type="checkbox" name="favorite" value="4" checked="checked">게임
+			<br>
+			기타 : <textarea cols="40" rows="10"></textarea>
+		</fieldset>
+		<fieldset>
+			<input type="submit" value="작성완료">
+		</fieldset>
+	</form>
+</body>
+
+</html>

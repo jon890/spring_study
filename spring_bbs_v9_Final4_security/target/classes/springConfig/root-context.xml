@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+		<tx:annotation-driven />
+		
+		<!-- DriverManagerDataSource는 커넥션 풀을 지원하지 않는다
+		개발시에는 DriverManagerDataSource를 사용해서 개발하고, 개발이 끝나고
+		운영환경에서는 커넥션 풀을 지원하는 클래스로 대체 -->
+		<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${driverClassName}"/>
+			<property name="url" value="${url}"/>
+			<property name="username" value="${username}"/>
+			<property name="password" value="${password}"/>
+		</bean> -->
+		
+		
+		<!-- 1. 커넥션 풀 만들기  -->
+		<!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="location" value="classpath:db.properties" />
+		</bean>
+
+		<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
+			<property name="driverClassName" value="${driverClassName}"/>
+			<property name="url" value="${url}"/>
+			<property name="username" value="${username}"/>
+			<property name="password" value="${password}"/>
+			<property name="maxIdle" value="5"/>
+			<property name="minIdle" value="2"/>
+			<property name="initialSize" value="10"/>			
+			<property name="maxTotal" value="30"/>			
+			<property name="maxWaitMillis" value="-1"/>			
+		</bean> -->
+		
+		<!-- 2. JNDI를 이용하여 context.xml에 등록해둔 Resources를 불러서 사용 -->
+		<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
+			<!-- resourceReft를 true로 설정하면 
+				 java:/comp/env를 안붙여도 디폴트로 인식  -->
+			<!-- <property name="jndiName" value="java:/comp/env/ict"/> -->
+			<!-- <property name="jndiName" value="ict"/>
+			<property name="resourceRef" value="true"/>
+		</bean> -->
+		<!-- 방법 2 끝 -->
+		
+		
+		<!-- 3. JEE를 이용해서 커넥션 풀 설정 -->
+		<jee:jndi-lookup id="dataSource" jndi-name="ict" resource-ref="true"/>
+		
+		
+		
+		
+		<!-- 속성으로 두기 -->
+		<bean id="transactionManager" 
+			  class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+			  p:dataSource-ref="dataSource"/>
+			  
+		
+		<!-- 자식 엘리먼트로 두기 [직관적] -->
+		<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="dataSource" />
+		</bean> -->
+		
+		
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+			p:dataSource-ref="dataSource"
+			p:configLocation="classpath:/mybatisConfig/mybatisConfig.xml"
+			p:mapperLocations="classpath:/com/ict/human/mapper/**/*.xml"/>
+		
+		<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource"/>
+			<property name="configLocation" value="classpath:/mybatisConfig/mybatisConfig.xml"/>
+			<property name="mapperLocations" value="classpath:/com/ict/human/mapper/**/*.xml"/>
+		</bean>  -->
+		
+		
+		<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+			<constructor-arg ref="sqlSessionFactory"/>
+			<!-- <constructor-arg>
+				<ref bean = "sqlSessionFactory"/>
+			</constructor-arg> -->
+		</bean>
+			
+			
+						
+		<!-- paging -->
+		
+		<bean id="pageSize" class="java.lang.Integer">
+			<constructor-arg value="10"/>
+		</bean>
+		
+		<bean id="pageBlock" class="java.lang.Integer">
+			<constructor-arg>
+				<value>10</value>
+			</constructor-arg>
+		</bean>
+		
+		<!-- 사용자 업로드 파일 저장 경로 -->
+		<bean id="saveDir" class="java.lang.String">
+			<constructor-arg value="D:\spring_project\upload"/>
+		</bean>
+		
+		
+</beans>
