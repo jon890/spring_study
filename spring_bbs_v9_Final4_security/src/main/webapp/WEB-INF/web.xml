@@ -31,7 +31,7 @@
 	
 	
 	<!-- XSS 방지 필터 등록 -->
-	<filter>
+<!-- 	<filter>
 		<filter-name>XSSFilter</filter-name>
 		<filter-class>com.ict.human.bbs.filter.XSSFilter</filter-class>
 	</filter>
@@ -39,7 +39,7 @@
 	<filter-mapping>
 		<filter-name>XSSFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 	<!-- XSS 방지 필터 등록 -->
 
 

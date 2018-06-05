@@ -20,7 +20,6 @@ public class XSSFilter implements Filter {
 
 		chain.doFilter(RequestWrapperReq, response);
 		
-		
 		//response 처리
 
 	}
