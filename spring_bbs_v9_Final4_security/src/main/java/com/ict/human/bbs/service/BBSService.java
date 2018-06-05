@@ -2,6 +2,7 @@ package com.ict.human.bbs.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -14,7 +15,7 @@ public interface BBSService {
 
 	public void write(BBSDto article);
 	public void list(String pageNum, Model model);
-	public String login(String id, String pass, HttpSession session);
+	public String login(String id, String pass, HttpServletRequest req, HttpSession session);
 	//public void content(int articleNum, int fileStatus, Model model);
 	public void content1(String articleNum, int fileStatus, Model model);
 	public void reply(BBSDto article);

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -71,7 +72,8 @@ public class BBSServiceImpl implements BBSService {
 
 	
 	@Override
-	public String login(String id, String pass, HttpSession session) {
+	public String login(String id, String pass,
+						HttpServletRequest req, HttpSession session) {
 //		정적인 쿼리를 사용한다면 id값을 화이트리스트로 처리해야함
 //		최종적으로는 ESAPI같은 보안 라이브러리를 사용
 		id = SQLFilter.sqlFiltering(id);
@@ -86,7 +88,11 @@ public class BBSServiceImpl implements BBSService {
 			if(pass.equals(dbPass)){
 				//System.out.println("로그인 되었습니다");
 				// session에 로그인 된 id를 심자
-				session.setAttribute("id", id);
+				
+				// 0605 - 세션 고정 취약점 간단한 해결법
+				session.invalidate();
+				req.getSession().setAttribute("id", id);
+				
 				// 그냥 list.jsp로 가면 controller를 거치지 않으므로
 				// 화면에 출력할 값이 안 나온다.
 				view = "redirect://list.bbs?pageNum=1";

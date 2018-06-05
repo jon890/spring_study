@@ -1,6 +1,7 @@
 package com.ict.human.bbs.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -57,10 +58,11 @@ public class BBSController {
 	
 
 	@RequestMapping(value = "/login.bbs", method = RequestMethod.POST)
-	public String login(@RequestParam String id, String pass, HttpSession session) {
+	public String login(@RequestParam String id, String pass, 
+						HttpServletRequest req ,HttpSession session) {
 		System.out.println("공백제거id//" + id);
 		System.out.println("공백제거pwd//" + pass);
-		return bbsService.login(id, pass, session);
+		return bbsService.login(id, pass, req, session);
 	}
 
 	@RequestMapping(value = "/login.bbs", method = RequestMethod.GET)
