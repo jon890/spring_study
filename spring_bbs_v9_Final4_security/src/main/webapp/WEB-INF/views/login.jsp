@@ -84,11 +84,11 @@
 					alert("비밀번호를 입력해주세요");
 					pass.focus();
 					return false;
-				} else if( pass.val().length < 8) {
+				} /* else if( pass.val().length < 8) {
 					alert("비밀번호는 8자 이상 입력해주세요");
 					pass.focus();
 					return false;
-				}	
+				}	 */
 				
 			});
 			

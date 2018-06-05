@@ -61,6 +61,10 @@ public class BBSServiceImpl implements BBSService {
 	@Override
 	public void write(BBSDto article) {
 		
+		// 스크립트 방지를 위한 < > 문자 대체
+		//article.setTitle(article.getTitle().replace("<", "&lt;").replace(">", "&gt;"));
+		//article.setContent(article.getContent().replace("<", "&lt;").replace(">", "&gt;"));
+		
 		if( article.getFiles()==null ){
 			bbsDao.write(article);			
 		} else{							
@@ -76,7 +80,7 @@ public class BBSServiceImpl implements BBSService {
 						HttpServletRequest req, HttpSession session) {
 //		정적인 쿼리를 사용한다면 id값을 화이트리스트로 처리해야함
 //		최종적으로는 ESAPI같은 보안 라이브러리를 사용
-		id = SQLFilter.sqlFiltering(id);
+//		id = SQLFilter.sqlFiltering(id);
 		
 		String dbPass = bbsDao.login(id);
 		String view = null;
