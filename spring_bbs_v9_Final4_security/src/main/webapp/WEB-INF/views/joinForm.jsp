@@ -17,7 +17,7 @@
 			<label for="id"> I D : <input type="text" name="id" id="id"></label><br>
 			<div id="idCheckStatus"></div>
 			<label for="pass">PWD : <input type="text" name="pass"id="pass"></label><br>
-			<label for="email">E-Mail : <input type="email" name="email" id="email"></label><br>
+			<label for="email">E-Mail : <input type="text" name="email" id="email"></label><br>
 			<label for="tel">Phone : <input type="tel" name="tel" id="tel"></label><br>
 			<label for="postcode"> 우편번호 : <input type="text" name="postcode1"> 
 								  - 	   <input type="text" name="postcode2"></label>
@@ -86,6 +86,19 @@
 			
 			
 		 });
+		 
+		 
+		 function checkEmail(email){
+			 let reg = /[a-zA-Z][0-9a-zA-Z\\-.]*[a-zA-Z0-9]@([a-zA-Z][0-9a-zA-Z]*[a-zA-Z0-9]\\.){1,2}[a-zA-z]{2,3}/;
+			 // let reg = new RegExp('//');
+			 let result = reg.test(email);
+			 
+			 if(!result){
+				 alert("이메일 형식에 오류가 있습니다");
+				 return false;
+			 }
+			 
+		 }
 		 
 		 
 		 function getDaumAddress(){
