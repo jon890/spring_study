@@ -60,8 +60,8 @@ public class BBSController {
 	@RequestMapping(value = "/login.bbs", method = RequestMethod.POST)
 	public String login(@RequestParam String id, String pass, 
 						HttpServletRequest req ,HttpSession session) {
-		System.out.println("공백제거id//" + id);
-		System.out.println("공백제거pwd//" + pass);
+		//System.out.println("공백제거id//" + id);
+		//System.out.println("공백제거pwd//" + pass);
 		return bbsService.login(id, pass, req, session);
 	}
 

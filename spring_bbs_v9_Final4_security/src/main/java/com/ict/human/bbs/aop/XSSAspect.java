@@ -45,10 +45,12 @@ public class XSSAspect {
 			}
 		}
 		
-		System.out.println(article);
+		//System.out.println((int)article.getContent().toCharArray()[0]);
 		
 		article.setTitle(article.getTitle().replace("<", "&lt;").replace(">", "&gt;"));
-		article.setContent(article.getContent().replace("<", "&lt;").replace(">", "&gt;"));
+		article.setContent(article.getContent().replace("<", "&lt;").replace(">", "&gt;")
+				.replace("시발", "*신발").replace("\r\n", "<br>"));
+		
 		
 		
 		

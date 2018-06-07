@@ -24,7 +24,6 @@ import com.ict.human.bbs.common.Page;
 import com.ict.human.bbs.dao.BBSDao;
 import com.ict.human.bbs.dto.BBSDto;
 import com.ict.human.bbs.dto.FileDto;
-import com.ict.human.bbs.security.SQLFilter;
 
 @Service
 @Qualifier("a")
@@ -86,7 +85,7 @@ public class BBSServiceImpl implements BBSService {
 		String view = null;
 		
 		if(dbPass == null) {
-			System.out.println("회원이 아닙니다");
+			//System.out.println("회원이 아닙니다");
 			view = "joinForm";
 		} else {
 			if(pass.equals(dbPass)){
@@ -274,7 +273,7 @@ public class BBSServiceImpl implements BBSService {
 			}
 			
 			resp.setHeader("Content-Disposition", "attachment;" + " filename=\"" + originFname + "\";");
-			System.out.println(saveDir + storedFname);
+			//System.out.println(saveDir + storedFname);
 			FileSystemResource fsr = new FileSystemResource(saveDir + storedFname);
 			return fsr;
 	}
