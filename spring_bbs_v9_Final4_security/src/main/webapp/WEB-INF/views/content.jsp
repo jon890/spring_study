@@ -177,9 +177,10 @@
 					<tr>	 
 						<td class="desc" >제목</td><td colspan="3">${article.title} [${article.commentCount}]</td>
 					</tr>
-									 
-					<tr>		 
+				
+					<tr>
 						<td colspan="4" id="content">${article.content}</td>
+						<%-- <td colspan="4" id="content">${article.content.replaceAll("\u0020", "&nbsp;").replaceAll("\r\n", "<br>").replaceAll("\t", "&#x09;")}</td> --%>
 					</tr>
 						
 					<tr>

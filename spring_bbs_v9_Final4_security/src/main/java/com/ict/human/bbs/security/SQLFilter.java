@@ -27,7 +27,7 @@ public class SQLFilter {
 								 .replaceAll("column_name", "q-column_name")
 								 .replaceAll("row_num", "q-row_num");	
 		
-		return null;
+		return inputString;
 	}
 	
 }

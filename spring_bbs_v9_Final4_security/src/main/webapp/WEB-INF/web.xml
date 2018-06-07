@@ -88,13 +88,18 @@
 	
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/views/404.jsp</location>
+		<location>/WEB-INF/views/error/404.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>405</error-code>
+		<location>/WEB-INF/views/error/405.jsp</location>
 	</error-page>
 	
 	
 	<error-page>
 		<error-code>500</error-code>
-		<location>/WEB-INF/views/500.jsp</location>
+		<location>/WEB-INF/views/error/500.jsp</location>
 	</error-page>
   
 </web-app>

@@ -38,7 +38,7 @@ public class BBSController {
 	}
 
 	// 글쓰기 버튼을 눌렀을 때 발생하는 동작
-	@RequestMapping(value = "/write.bbs", method = RequestMethod.GET)
+	@RequestMapping(value = "/writeForm.bbs", method = RequestMethod.POST)
 	public String writeForm(HttpSession session) {
 		return "writeForm";
 	}
@@ -155,6 +155,11 @@ public class BBSController {
 	@ResponseBody
 	public String joinIdCheck(@RequestParam String inputId) {
 		return bbsService.joinIdCheck(inputId);
+	}
+	
+	@RequestMapping(value = "/illegalPath.bbs")
+	public String illegalPath() {
+		return "error/405";
 	}
 
 }

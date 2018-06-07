@@ -37,6 +37,7 @@
 		<div class="container">
 			<form action="/human/write.bbs" method="post">
 				<!-- <input type="hidden" id="fileStatus" name="fileStatus" value="0"> -->
+				<input type="hidden" name="CSRF_TOKEN" value="${CSRF_TOKEN}">
 				<table class="table">  
 					<tr>
 			 			 <td>작성자</td>

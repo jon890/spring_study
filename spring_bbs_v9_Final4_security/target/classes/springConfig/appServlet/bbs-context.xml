@@ -21,6 +21,20 @@
 	<!-- AspectJ를 쓸 수 있게 하는 구문 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
+	
+	<!-- 인터셉터 객체 생성 -->
+	<bean id="CSRFInterceptor" class="com.ict.human.bbs.interceptor.CSRFInterceptor">
+	</bean>
+	
+	<!-- 인터셉터 설정 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/write.bbs"/>
+			<mvc:mapping path="/update.bbs"/>
+			<mvc:mapping path="/reply.bbs"/>
+			<ref bean="CSRFInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />

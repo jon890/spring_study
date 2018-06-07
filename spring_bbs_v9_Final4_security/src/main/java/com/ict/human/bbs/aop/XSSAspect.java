@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 import com.ict.human.bbs.dto.BBSDto;
 
 
-//-> SpringFrameWork
-//@Named
+//@Component -> SpringFrameWork
 //@Named -> JavaEE
 @Component
 @Aspect
@@ -48,8 +47,10 @@ public class XSSAspect {
 		//System.out.println((int)article.getContent().toCharArray()[0]);
 		
 		article.setTitle(article.getTitle().replace("<", "&lt;").replace(">", "&gt;"));
+//		article.setContent(article.getContent().replace("<", "&lt;").replace(">", "&gt;")
+//				.replace("시발", "*신발"));
 		article.setContent(article.getContent().replace("<", "&lt;").replace(">", "&gt;")
-				.replace("시발", "*신발").replace("\r\n", "<br>"));
+				.replace("시발", "*신발").replaceAll("\t", "&#x09;").replaceAll("\r\n", "<br>").replaceAll("\u0020", "&nbsp;"));
 		
 		
 		

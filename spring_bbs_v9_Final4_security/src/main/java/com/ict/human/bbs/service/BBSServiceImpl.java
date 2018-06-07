@@ -24,6 +24,7 @@ import com.ict.human.bbs.common.Page;
 import com.ict.human.bbs.dao.BBSDao;
 import com.ict.human.bbs.dto.BBSDto;
 import com.ict.human.bbs.dto.FileDto;
+import com.ict.human.bbs.security.CSRFManager;
 
 @Service
 @Qualifier("a")
@@ -94,11 +95,13 @@ public class BBSServiceImpl implements BBSService {
 				
 				// 0605 - 세션 고정 취약점 간단한 해결법
 				session.invalidate();
-				req.getSession().setAttribute("id", id);
+				session = req.getSession();
+				CSRFManager.createSession(session, id);			
+
 				
 				// 그냥 list.jsp로 가면 controller를 거치지 않으므로
 				// 화면에 출력할 값이 안 나온다.
-				view = "redirect://list.bbs?pageNum=1";
+				view = "redirect:/list.bbs?pageNum=1";
 			} else {
 				//System.out.println("비밀번호가 틀렸습니다");
 				view = "passFail";

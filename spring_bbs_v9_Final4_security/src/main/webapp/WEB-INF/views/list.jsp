@@ -120,7 +120,8 @@
 		<hr>
 		<!-- a 태그는 get 방식이다. -->
 		<!-- <a href="/human/write.bbs">글쓰기</a> -->
-		<form action="/human/write.bbs" method="get">
+		<form action="/human/writeForm.bbs" method="POST">
+			<input type="hidden" name="CSRF_TOKEN" value="${CSRF_TOKEN}">
 			<input type="submit" value="글쓰기" id="write">
 		</form>
 			
