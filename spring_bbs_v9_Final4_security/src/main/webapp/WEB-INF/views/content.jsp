@@ -212,7 +212,7 @@
 							<td colspan="4">	    	
 								<input type="submit" value="답글달기">
 								<c:if test="${id ==article.id}">
-									<input type="button" value="수정하기" onclick="document.location.href='/human/updateForm.bbs?articleNum=${article.articleNum}&pageNum=${pageNum}&fileStatus=${article.fileStatus}&CSRF_TOKEN=${CSRF_TOKEN}'">
+									<input type="button" value="수정하기" onclick="document.location.href='/human/updateForm.bbs?articleNum=${article.articleNum}&pageNum=${pageNum}&fileStatus=${article.fileStatus}'">
 									<input type="button" value="삭제하기" onclick="document.location.href='/human/delete.bbs?articleNum=${article.articleNum}&pageNum=${pageNum}&fileStatus=${article.fileStatus}'">
 								</c:if>
 								

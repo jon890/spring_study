@@ -5,22 +5,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestDataValueProcessor;
 
-@Component
 public class CSRFRequestDataValueProcessor implements RequestDataValueProcessor {
 
 	@Override
 	public String processAction(HttpServletRequest request, String action, String httpMethod) {
-		
-		return null;
+		System.out.println(action + " ---- 1"); // /human/write.bbs  --  폼에 있는 action을 받아옴
+		System.out.println(httpMethod + " ---- 2"); // post  --  form에 있는 메소드 방식을 받아옴
+		return action;
 	}
 
 	@Override
 	public String processFormFieldValue(HttpServletRequest request, String name, String value, String type) {
 		
-		return null;
+		return value;
 	}
 
 	@Override
@@ -32,8 +31,8 @@ public class CSRFRequestDataValueProcessor implements RequestDataValueProcessor 
 
 	@Override
 	public String processUrl(HttpServletRequest request, String url) {
-		
-		return null;
+		System.out.println(url + " ---- 6 "); // /human/list.bbs?pageNum=1   -- 컨트롤러가 동작 후 돌아갈 뷰 
+		return url;
 	}
 
 }
