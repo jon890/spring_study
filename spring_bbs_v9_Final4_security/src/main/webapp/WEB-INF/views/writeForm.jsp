@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<!-- CSRFRequestDataValueProcess의 파라미터를 hidden으로 받기 위해 필요하다 -->
+<!-- form:form태그를 이용한다. -->
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE>
 <html>
 	<head>
@@ -35,9 +40,8 @@
 	<body>
 
 		<div class="container">
-			<form action="/human/write.bbs" method="post">
+			<form:form action="/human/write.bbs" method="post">
 				<!-- <input type="hidden" id="fileStatus" name="fileStatus" value="0"> -->
-				<input type="hidden" name="CSRF_TOKEN" value="${CSRF_TOKEN}">
 				<table class="table">  
 					<tr>
 			 			 <td>작성자</td>
@@ -67,7 +71,7 @@
 				<input type="button" value="모두삭제" onclick="allDeleteFiles()"/>
 				<div class="uploadedList"></div>
 				
-			</form>
+			</form:form>
 		</div>
 		
 		<script>

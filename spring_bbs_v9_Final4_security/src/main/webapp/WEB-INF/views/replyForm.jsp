@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+    
 <!DOCTYPE>
 <html>
 	<head>
@@ -47,7 +49,7 @@
 	<body>
 
 		<div class="container">
-			<form action="/human/reply.bbs" method="post">     
+			<form:form action="/human/reply.bbs" method="post">     
 			<input type="hidden" id="fileStatus" name="fileStatus" value="0">  
 			<input type="hidden" name="pageNum" value="${pageNum}">    
 			<input type="hidden" name="depth" value="${depth}">
@@ -84,7 +86,7 @@
 				</div>
 				<input type="button" value="업로드 파일 모두 삭제">
 				<div class="uploadedList"></div>
-			</form>
+			</form:form>
 		</div>
 		
 		

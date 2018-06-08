@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="common" uri="/WEB-INF/tlds/elFunctions.tld" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html>
@@ -59,7 +59,7 @@
 	<body>
 	
 		<div class="container">
-			<form action="/human/update.bbs" method="post">
+			<form:form action="/human/update.bbs" method="post">
 				<input type="hidden" name="articleNum" value="${articleNum}">
 				<input type="hidden" name="pageNum" value="${pageNum}">
 				<input type="hidden" id="fileStatus" name="fileStatus" value="${fileStatus}">
@@ -130,7 +130,7 @@
 						</c:if> --%>
 				</div>
 				<input type="button" id="allDelete" value="업로드된 파일 모두 삭제" onclick="allDeleteFiles()">
-			</form>
+			</form:form>
 		</div>
 
 		<script>

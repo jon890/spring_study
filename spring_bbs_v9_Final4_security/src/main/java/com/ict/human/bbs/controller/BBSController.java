@@ -107,7 +107,7 @@ public class BBSController {
 
 	
 	// 수정할 글 읽어오기
-	@RequestMapping(value = "/update.bbs", method = RequestMethod.GET)
+	@RequestMapping(value = "/updateForm.bbs", method = RequestMethod.GET)
 	public String getUpdateArticle(@ModelAttribute("articleNum") String articleNum,
 								   @ModelAttribute("pageNum") String pageNum,
 								   @ModelAttribute("fileStatus") int fileStatus,

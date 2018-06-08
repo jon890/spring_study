@@ -1,7 +1,7 @@
 글쓰기 본문내용으로 사용하면 자동 글쓰기가 되므로 CSRFInterceptor가
 잘못된 요청을 알아낼수 있음
 
-<input type="hidden" name="csrfToken" value="fff4724f-f778-435d-b249-b55f13574b88">
+<input type="hidden" name="csrfToken" value="a2823476-3fc9-4ab1-8590-fcd72dab5d06">
 <input type="hidden" name="title" value="555">			 
 <input type="hidden" name="content" value="2312312313!">		
 <input type="submit" name="send" id="send">	
