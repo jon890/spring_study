@@ -96,8 +96,8 @@
 	</select>
 	
 	<!-- 글 내용 읽기 // 파일 읽기 -->
-	<select id="getFiles" parameterType="java.lang.String" resultType="String">
-		SELECT STOREDFNAME
+	<select id="getFiles" parameterType="String" resultType="file">
+		SELECT FILENUM, STOREDFNAME
 		FROM FILELIST1
 		WHERE ARTICLENUM = #{articleNum}
 	</select>
@@ -166,5 +166,13 @@
 		FROM LOGIN
 		WHERE ID = #{inputId}
 	</select>
+	
+	<!-- 파일 번호로 저장되어있는 파일 이름 불러오기  -->
+	<select id="getStoredFname" parameterType="String" resultType="String">
+		SELECT STOREDFNAME
+		FROM FILELIST1
+		WHERE FILENUM = #{fileNum}
+	</select>
+		
 		
 </mapper>

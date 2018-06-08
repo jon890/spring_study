@@ -1,6 +1,5 @@
 package com.ict.human.bbs.controller;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,9 +27,7 @@ public class BBSController {
 	@Qualifier("a")
 	private BBSService bbsService;
 	
-	@Resource(name = "saveDir")
-	private String saveDir;
-
+	
 	@RequestMapping(value = "/list.bbs", method = RequestMethod.GET)
 	public String list(@ModelAttribute("pageNum") String pageNum, Model model) {
 		bbsService.list(pageNum, model);
@@ -81,6 +78,12 @@ public class BBSController {
 		bbsService.content1(articleNum, fileStatus, model);
 		// 해당글의 댓글 수를 가져오는 쿼리를 한 번더 실행
 		// bbsService.content(articleNum, fileStatus, model);
+		
+		// 0608 - 파일 다운로드 취약점 - 외부 접근 금지
+		// 세션에 글 번호 심기
+		session.setAttribute("articleNum", articleNum);
+		
+		System.out.println("현재 세션에 있는 글 번호 : " + articleNum);
 		return "content";
 	}
 
@@ -99,9 +102,9 @@ public class BBSController {
 
 	@RequestMapping(value = "/delete.bbs", method = RequestMethod.GET)
 	public String delete(@RequestParam("pageNum") String pageNum, @RequestParam("articleNum") String articleNum,
-			@RequestParam("fileStatus") int fileStatus) {
+			@RequestParam("fileStatus") int fileStatus, HttpSession session) {
 
-		bbsService.delete(articleNum, fileStatus);
+		bbsService.delete(articleNum, fileStatus, session);
 		return "redirect:/list.bbs?pageNum=".concat(pageNum);
 	}
 
@@ -125,13 +128,15 @@ public class BBSController {
 
 	// 글 수정하기 버튼을 눌렀을 때 동작
 	@RequestMapping(value = "/update.bbs", method = RequestMethod.POST)
-	public String update(BBSDto article,
+	public String update(BBSDto article, HttpSession session,
 						 @RequestParam("articleNum") String articleNum, 
 						 @RequestParam("pageNum") String pageNum,
 						 String[] deleteFileName,
 						 Model model,
 						 int fileCount) {
-		bbsService.update(article, deleteFileName, model, fileCount);
+		
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+		bbsService.update(article, deleteFileName, model, fileCount, saveDir);
 		//System.out.println("article status : " + article.getFileStatus());
 		return "redirect:/content.bbs?pageNum=" + pageNum + "&articleNum=" + articleNum + "&fileStatus=" + article.getFileStatus();
 	}

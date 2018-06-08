@@ -26,6 +26,9 @@
 	<bean id="CSRFInterceptor" class="com.ict.human.bbs.interceptor.CSRFInterceptor">
 	</bean>
 	
+	<bean id="DownloadInterceptor" class="com.ict.human.bbs.interceptor.DownloadInterceptor">
+	</bean>
+	
 	<!-- 인터셉터 설정 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
@@ -33,6 +36,11 @@
 			<mvc:mapping path="/update.bbs"/>
 			<mvc:mapping path="/reply.bbs"/>
 			<ref bean="CSRFInterceptor"/>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/download.bbs"/>
+			<ref bean="DownloadInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 

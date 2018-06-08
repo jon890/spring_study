@@ -7,8 +7,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -34,13 +34,10 @@ import com.ict.human.bbs.service.BBSService;
 
 
 @Controller
-public class UploadController {
+public class UploadAjaxController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
-	
-	@Resource(name = "saveDir")
-	private String saveDir;
-	
+	private static final Logger logger = LoggerFactory.getLogger(UploadAjaxController.class);
+
 	@Autowired
 	@Qualifier("a")
 	private BBSService bbsService;
@@ -48,8 +45,11 @@ public class UploadController {
 	// 비동기 업로드 - 글쓰기시 동작
 	@ResponseBody
 	@RequestMapping(value = "/uploadAjax.bbs", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public ResponseEntity<List<String>> uploadAjax(@RequestPart("multiFile") List<MultipartFile> mfile)
-			throws Exception {
+	public ResponseEntity<List<String>> uploadAjax(@RequestPart("multiFile") List<MultipartFile> mfile,
+												   HttpSession session) throws Exception {
+		System.out.println(session.getServletContext().getRealPath("/"));
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+		
 		List<String> fileList = new ArrayList<>();
 
 		for (MultipartFile file : mfile) {
@@ -58,11 +58,15 @@ public class UploadController {
 		return new ResponseEntity<>(fileList, HttpStatus.CREATED);
 	}
 
+	
+	
+	
 	// 비동기 업로드 - 파일 이름과 썸네일 이미지 보여주기
-
 	@ResponseBody
 	@RequestMapping(value = "/displayFile.bbs")
-	public ResponseEntity<byte[]> displayFile(String fileName) throws Exception {
+	public ResponseEntity<byte[]> displayFile(String fileName, HttpSession session) throws Exception {
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+		
 		InputStream in = null;
 		ResponseEntity<byte[]> entity = null;
 
@@ -90,16 +94,20 @@ public class UploadController {
 		return entity;
 	}
 	
+	
 	@RequestMapping(value = "/download.bbs")
 	@ResponseBody
-	public FileSystemResource download(HttpServletResponse resp, @RequestParam String storedFname) {
-		return bbsService.download(resp, storedFname);
-
+	public FileSystemResource download(HttpServletResponse resp, @RequestParam String fileNum, HttpSession session) {
+		return bbsService.download(resp, fileNum, session);
 	}
 
+	
 	@ResponseBody
 	@RequestMapping(value = "/deleteFile.bbs", method = RequestMethod.POST)
-	public ResponseEntity<String> deleteFile(String fileName) {
+	public ResponseEntity<String> deleteFile(String fileName, HttpSession session) {
+		
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+		
 		logger.info("delete file: " + fileName);
 		String formatName = fileName.substring(fileName.lastIndexOf(".") + 1);
 		MediaType mType = MediaUtils.getMediaType(formatName);
@@ -114,12 +122,16 @@ public class UploadController {
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 	}
 
+	
 	@ResponseBody
 	@RequestMapping(value = "/deleteAllFiles.bbs", method = RequestMethod.POST)
 	// ajax() 함수가 배열을 직렬화 하지 않고 보낼때는..아래 코드처럼 해도 처리됨
 	// public ResponseEntity<String> deleteFile(@RequestParam("files[]") String[]
 	// files){
-	public ResponseEntity<String> deleteFile(@RequestParam("files") String[] files) {
+	public ResponseEntity<String> deleteFile(@RequestParam("files") String[] files, HttpSession session) {
+		
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+		
 		logger.info("delete all files: " + files);
 		if (files == null || files.length == 0) {
 			return new ResponseEntity<String>("deleted", HttpStatus.OK);

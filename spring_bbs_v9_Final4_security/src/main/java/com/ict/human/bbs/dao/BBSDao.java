@@ -18,7 +18,7 @@ public interface BBSDao {
 	public void reply(BBSDto article);
 	public void delete(String articleNum);
 	public void insertFile(FileDto fileDto);
-	public List<String> getFiles(String articleNum);
+	public List<FileDto> getFiles(String articleNum);
 	public int getCommentCount(int articleNum);
 	public int getNextArticleNum();
 	
@@ -32,5 +32,8 @@ public interface BBSDao {
 	
 	/* *********** 회원 가입시 아이디 체크 ************ */
 	public String joinIdCheck(String inputId);
+	
+	/* *********** 회원 가입시 아이디 체크 ************ */
+	public String getStoredFname(String fileNum);
 
 }

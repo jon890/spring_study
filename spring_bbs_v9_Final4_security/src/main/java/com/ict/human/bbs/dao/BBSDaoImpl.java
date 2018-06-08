@@ -93,7 +93,7 @@ public class BBSDaoImpl implements BBSDao{
 	}
 
 	@Override
-	public List<String> getFiles(String articleNum) {
+	public List<FileDto> getFiles(String articleNum) {
 		return sqlSession.selectList(nameSpace.concat(".getFiles"), articleNum);
 	}
 
@@ -111,7 +111,9 @@ public class BBSDaoImpl implements BBSDao{
 	public String joinIdCheck(String inputId) {
 		return sqlSession.selectOne(nameSpace.concat(".joinIdCheck"), inputId);
 	}
-	
-	
-	
+
+	@Override
+	public String getStoredFname(String fileNum) {
+		return sqlSession.selectOne(nameSpace.concat(".getStoredFname"), fileNum);
+	}
 }

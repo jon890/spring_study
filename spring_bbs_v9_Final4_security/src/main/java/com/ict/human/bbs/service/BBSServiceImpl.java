@@ -36,9 +36,6 @@ public class BBSServiceImpl implements BBSService {
 	@Autowired
 	private Page page;
 	
-	@Resource(name="saveDir")
-	private String saveDir;
-	
 	// root-context.xml에 선언되어있는 bean 객체가 int형이 두 개
 	// 따라서 @Autowired로 하면 에러가 발생한다.
 	@Resource(name="pageSize")
@@ -147,15 +144,23 @@ public class BBSServiceImpl implements BBSService {
 
 
 	@Override
-	public void delete(String articleNum, int fileStatus) {
+	public void delete(String articleNum, int fileStatus, HttpSession session) {
+		String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
 		
 		List<String> deleteList = null;
 		
+		
+		
 		if(fileStatus == 1) {
-			deleteList = bbsDao.getFiles(articleNum);
+			deleteList = new ArrayList<String>();
+			
+			for( FileDto temp : bbsDao.getFiles(articleNum) ) {
+				deleteList.add(temp.getStoredFname());
+			}
 			for(String storedFname : deleteList) {
 				File tempFile = new File(saveDir + storedFname);
 				// 파일이 존재하는지 확인하는 메소드
+				// 이미지 파일일 경우 s_ 붙어있는 썸네일 이미지 파일 삭제는 구현 안했음..
 				if(tempFile.exists()) {
 					tempFile.delete();
 				}
@@ -172,7 +177,7 @@ public class BBSServiceImpl implements BBSService {
 	}
 
 	@Override
-	public void update(BBSDto article, String[] deleteFileName, Model model, int fileCount) {
+	public void update(BBSDto article, String[] deleteFileName, Model model, int fileCount, String saveDir) {
 		
 		//System.out.println("이전에 업로드한 파일 개수 : " + fileCount);
 		//System.out.println("지울 파일의 이름 : "+ deleteFileName);
@@ -185,7 +190,7 @@ public class BBSServiceImpl implements BBSService {
 			
 			// 이전의 파일을 지웠다면
 			if(deleteFileName != null) {
-				commonDelFileName(deleteFileName);
+				commonDelFileName(deleteFileName, saveDir);
 			}
 		// 새로 업로드한 파일이 없을 때	
 		} else {
@@ -198,7 +203,7 @@ public class BBSServiceImpl implements BBSService {
 					article.setFileStatus((byte)0);
 				}
 				
-				commonDelFileName(deleteFileName);
+				commonDelFileName(deleteFileName, saveDir);
 				
 			}	
 		}
@@ -207,7 +212,7 @@ public class BBSServiceImpl implements BBSService {
 	}
 	
 	
-	public void commonDelFileName(String[] deleteFileName) {
+	public void commonDelFileName(String[] deleteFileName, String saveDir) {
 	
 		// Mybatis 매퍼 파일이 List를 받을 수 있다 (배열도 가능 하다)
 		// List를 이용할 수 있다는 것을 보여주기 위한 예제 코드
@@ -217,12 +222,12 @@ public class BBSServiceImpl implements BBSService {
 		}
 		bbsDao.dbDelFileName(delFileList);
 		for(String storedFname : deleteFileName) {
-			storageDelFileName(storedFname);
+			storageDelFileName(storedFname, saveDir);
 		}
 	}
 	
 	
-	public void storageDelFileName(String storedFname) {
+	public void storageDelFileName(String storedFname, String saveDir) {
 		if (storedFname != null) {
 			String formatName = storedFname.substring(storedFname.lastIndexOf(".") + 1);
 			MediaType mType = MediaUtils.getMediaType(formatName);
@@ -247,7 +252,16 @@ public class BBSServiceImpl implements BBSService {
 	
 	@Override
 	public List<String> getFiles(String articleNum) {
-		return bbsDao.getFiles(articleNum);
+		
+		List<String> fileList = null;
+		
+		fileList = new ArrayList<String>();
+		
+		for( FileDto temp : bbsDao.getFiles(articleNum) ) {
+			fileList.add(temp.getStoredFname());
+		}
+		
+		return fileList;
 	}
 
 	@Override
@@ -265,7 +279,12 @@ public class BBSServiceImpl implements BBSService {
 	
 	@Override
 	// 파일시스템 리소스 이용
-	public FileSystemResource download(HttpServletResponse resp, String storedFname) {
+	public FileSystemResource download(HttpServletResponse resp, String fileNum, HttpSession session) {
+		
+			String saveDir = session.getServletContext().getRealPath("/") + "WEB-INF/upload/";
+			
+			String storedFname = bbsDao.getStoredFname(fileNum);
+			
 			resp.setContentType("application/download");
 			int idx = storedFname.indexOf("_") + 1;
 			String originFname = storedFname.substring(idx);
@@ -282,6 +301,7 @@ public class BBSServiceImpl implements BBSService {
 	}
 
 
+	
 	@Override
 	public String joinIdCheck(String inputId) {
 		String idCheck = bbsDao.joinIdCheck(inputId);

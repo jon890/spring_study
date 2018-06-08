@@ -193,9 +193,9 @@
 							<c:if test="${article.fileStatus !=0}">
 								<c:if test="${files!=null}">
 									<ul>
-										<c:forEach var="storedFname" items="${files}">
-											<li><a href="download.bbs?storedFname=${storedFname}">
-											${storedFname.substring(storedFname.indexOf("_") + 1)}</a></li>
+										<c:forEach var="file" items="${files}">
+											<li><a href="download.bbs?articleNum=${article.articleNum}&fileNum=${file.fileNum}">
+											${file.storedFname.substring(file.storedFname.indexOf("_") + 1)}</a></li>
 											<!-- 
 												JSTL 이용
 												${fn:substringAfter(storedFname,"_")}

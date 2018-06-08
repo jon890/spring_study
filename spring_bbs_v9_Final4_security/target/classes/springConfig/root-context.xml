@@ -55,8 +55,7 @@
 		<jee:jndi-lookup id="dataSource" jndi-name="ict" resource-ref="true"/>
 		
 		
-		
-		
+			
 		<!-- 속성으로 두기 -->
 		<bean id="transactionManager" 
 			  class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
@@ -88,10 +87,8 @@
 			</constructor-arg> -->
 		</bean>
 			
-			
-						
+								
 		<!-- paging -->
-		
 		<bean id="pageSize" class="java.lang.Integer">
 			<constructor-arg value="10"/>
 		</bean>
@@ -101,11 +98,5 @@
 				<value>10</value>
 			</constructor-arg>
 		</bean>
-		
-		<!-- 사용자 업로드 파일 저장 경로 -->
-		<bean id="saveDir" class="java.lang.String">
-			<constructor-arg value="D:\spring_project\upload"/>
-		</bean>
-		
 		
 </beans>

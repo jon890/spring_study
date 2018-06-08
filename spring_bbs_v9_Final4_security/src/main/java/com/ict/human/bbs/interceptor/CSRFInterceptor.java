@@ -42,11 +42,11 @@ public class CSRFInterceptor extends HandlerInterceptorAdapter {
 		String sessionToken = CSRFManager.getSessionToken(request.getSession());
 		String requestToken = CSRFManager.getRequestToken(request);
 		
-		System.out.println("session 토큰 = " + sessionToken);
-		System.out.println("request hidden 토큰 = " + requestToken);
+		//System.out.println("session 토큰 = " + sessionToken);
+		//System.out.println("request hidden 토큰 = " + requestToken);
 		
 		if( sessionToken != null && sessionToken.equals(requestToken)) {
-			System.out.println("CSRF_TOKEN 확인 : " + sessionToken);
+			//System.out.println("CSRF_TOKEN 확인 : " + sessionToken);
 			return true;
 		} else {
 			response.sendRedirect("/human/illegalPath.bbs");
